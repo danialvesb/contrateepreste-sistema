@@ -13,12 +13,15 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api', 'cors')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/services', 'ServiceController@index');
-Route::get('/services/{id}', 'ServiceController@show');
-Route::post('/services', 'ServiceController@store');
-Route::put('/services/{id}', 'ServiceController@update');
-Route::delete('/services/{id}', 'ServiceController@destroy');
+
+Route::get('/services.json', 'ServiceController@index');
+Route::get('/services/{id}.json', 'ServiceController@show');
+Route::post('/services.json', 'ServiceController@store');
+Route::put('/services/{id}.json', 'ServiceController@update');
+Route::delete('/services/{id}.json', 'ServiceController@destroy');
+
+
