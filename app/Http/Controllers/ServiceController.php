@@ -36,11 +36,22 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         try {
-            $serviceData = $request->all();
-            $this->services->create($serviceData);
 
-            $return =  ['data' => ['message' => 'Serviço Cadastrado Com Sucesso']];
-            return response()->json($return, 201);
+            $title = $request->json('title');
+            $category = $request->json('category');
+            $description =  $request->json('description');
+            $file = $request->json('file');
+
+
+            $serviceJson = ['title'=>$title,
+                'category_id'=>$category,
+                'description'=>$description,
+                'file'=>$file];
+
+            $this->services->create($serviceJson);
+
+            $returns =  ['data' => ['message' => 'Serviço Cadastrado Com Sucesso']];
+            return response()->json($returns, 201);
 
         }catch(\Exception $e) {
             return response()->json($e->getMessage(), 501);
@@ -93,9 +104,9 @@ class ServiceController extends Controller
 
             $return = ['data' => ['message' => 'Serviço Deletado Com Sucesso']];
 
-            return response()->json($return, 201);
+            return response()->json($return);
         }catch (\Exception $e) {
-            response()->json($e->getMessage(), 501);
+            response()->json($e->getMessage());
         }
 
     }
