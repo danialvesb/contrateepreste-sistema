@@ -18,10 +18,14 @@ Route::middleware('auth:api', 'cors')->get('/user', function (Request $request) 
 });
 
 
-Route::get('/services.json', 'ServiceController@index');
-Route::get('/services/{id}.json', 'ServiceController@show');
-Route::post('/services.json', 'ServiceController@store');
-Route::put('/services/{id}.json', 'ServiceController@update');
-Route::delete('/services/{id}.json', 'ServiceController@destroy');
+Route::get('/services', 'ServiceController@index');
+Route::get('/services/{id}', 'ServiceController@show');
+Route::post('/services', 'ServiceController@store');
+Route::put('/services/{id}', 'ServiceController@update');
+Route::delete('/services/{id}', 'ServiceController@destroy');
 
-
+Route::get('/services/categories', 'CategoryController@index');
+Route::get('/services/categories/{id}', 'CategoryController@show');
+Route::post('/services/categories', 'CategoryController@store');
+Route::put('/services/categories/{id}', 'CategoryController@update');
+Route::delete('/services/categories/{id}', 'CategoryController@destroy');
