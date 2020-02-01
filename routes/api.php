@@ -13,19 +13,26 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api', 'cors')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 
-Route::get('/services', 'ServiceController@index');
-Route::get('/services/{id}', 'ServiceController@show');
-Route::post('/services', 'ServiceController@store');
-Route::put('/services/{id}', 'ServiceController@update');
-Route::delete('/services/{id}', 'ServiceController@destroy');
+Route::middleware(['cors'])->group(function () {
+    //Rotas raizes devem ser colocadas depois pois evita que as mesmas vão substituam as rotas do subdomínio que possuem o mesmo caminho de URI.
 
-Route::get('/services/categories', 'CategoryController@index');
-Route::get('/services/categories/{id}', 'CategoryController@show');
-Route::post('/services/categories', 'CategoryController@store');
-Route::put('/services/categories/{id}', 'CategoryController@update');
-Route::delete('/services/categories/{id}', 'CategoryController@destroy');
+    Route::get('/services/categories', 'CategoryController@index');
+    Route::get('/services/categories/{id}', 'CategoryController@show');
+    Route::post('/services/categories', 'CategoryController@store');
+    Route::put('/services/categories/{id}', 'CategoryController@update');
+    Route::delete('/services/categories/{id}', 'CategoryController@destroy');
+
+    Route::get('/services', 'ServiceController@index');
+    Route::get('/services/{id}', 'ServiceController@show');
+    Route::post('/services', 'ServiceController@store');
+    Route::put('/services/{id}', 'ServiceController@update');
+    Route::delete('/services/{id}', 'ServiceController@destroy');
+
+
+});
+
