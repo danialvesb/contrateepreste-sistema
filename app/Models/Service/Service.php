@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Service\Category;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Service\Category;
+
 
 class Service extends Model
 {
@@ -17,7 +18,7 @@ class Service extends Model
     ];
 
     public function category() {
-        return $this->hasOne('Category');
+        return $this->belongsTo(Category::class);
     }
 
 }

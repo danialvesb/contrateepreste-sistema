@@ -24,6 +24,9 @@ class ServiceController extends Controller
      */
     public function index()
     {
+//        $serviceCategory = $this->services::first();
+//        print_r(json_encode($serviceCategory->category));
+
         return response()->json($this->services->all());
     }
 

@@ -24,7 +24,7 @@ Route::middleware(['cors'])->group(function () {
     Route::get('/services/categories', 'CategoryController@index');
     Route::get('/services/categories/{id}', 'CategoryController@show');
     Route::post('/services/categories', 'CategoryController@store');
-    Route::put('/services/categories/{id}', 'CategoryController@update');
+    Route::put('/services/ /{id}', 'CategoryController@update');
     Route::delete('/services/categories/{id}', 'CategoryController@destroy');
 
     Route::get('/services', 'ServiceController@index');
