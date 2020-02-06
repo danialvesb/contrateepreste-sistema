@@ -83,6 +83,16 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $categorie = $this->categories->all()->find($id);
+            $categorie->delete($categorie);
+
+            $return = ['data' => ['message' => 'Categoria Deletada Com Sucesso']];
+
+            return response()->json($return);
+        }catch (\Exception $e) {
+            response()->json($e->getMessage());
+        }
+
     }
 }
