@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -24,10 +25,14 @@ class ServiceController extends Controller
      */
     public function index()
     {
-//        $serviceCategory = $this->services::first();
-//        print_r(json_encode($serviceCategory->category));
+        $result =DB::table('services')
+            ->select('services.id', 'services.title', 'services.description', 'services.file', 'services.created_at', 'services.updated_at', 'services.category_id', 'categories.title as category_title')
+            ->join('categories', function($join) {
+                $join->on('services.category_id', '=', 'categories.id');
+            })->get();
 
-        return response()->json($this->services->all());
+
+        return response()->json($result);
     }
 
     /**
