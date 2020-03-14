@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+use Validator;
+//Passar o validator para a model
 
 class UserController extends Controller
 {
@@ -23,11 +27,29 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $validator = $this->userValidator($request);
+        $data = $request->all();
+
+        if($validator->fails() ) {
+            return response()->json([
+                'message' => 'Validation Failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = new User();
+
+        $user->fill($data);
+
+        $password = $request->only('password')["password"];
+        $user->password = Hash::make($password);
+        $user->save();
+
+        return response()->json($user, 201);
     }
 
     /**
@@ -62,5 +84,16 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    protected function userValidator($request) {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:100',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|max:100'
+        ]);
+
+        return $validator;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,6 +26,7 @@ class ServiceController extends Controller
      */
     public function index()
     {
+        return dd(auth()->user());
         $result =DB::table('services')
             ->select('services.id', 'services.title', 'services.description', 'services.file', 'services.created_at', 'services.updated_at', 'services.category_id', 'categories.title as category_title')
             ->join('categories', function($join) {
