@@ -17,7 +17,7 @@ class CreateServicesTable extends Migration
             $table->integerIncrements('id');
             $table->string('title', 100);
             $table->unsignedInteger('category_id');
-            $table->text('description');
+            $table->string('description', 102);
             $table->text('file');
             $table->timestamps();
 

@@ -12,27 +12,40 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//
+//Route::middleware(['auth:api'])->group(function () {
+//    Route::get('/users', 'UserController@index');
+//});
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
 });
 
+Route::middleware(['apijwt'])->group(function () {
+    Route::get('/users', 'UserController@index');
+});
 
 Route::middleware(['cors'])->group(function () {
+    Route::post('/signup', 'UserController@store');
+});
+
+Route::middleware(['cors', 'apijwt'])->group(function () {
     //Rotas raizes devem ser colocadas depois pois evita que as mesmas vão substituam as rotas do subdomínio que possuem o mesmo caminho de URI.
 
     Route::get('/services/categories', 'CategoryController@index');
     Route::get('/services/categories/{id}', 'CategoryController@show');
     Route::post('/services/categories', 'CategoryController@store');
-    Route::put('/services/categories/{id}', 'CategoryController@update');
+    Route::put('/services/ /{id}', 'CategoryController@update');
     Route::delete('/services/categories/{id}', 'CategoryController@destroy');
 
     Route::get('/services', 'ServiceController@index');
-    Route::get('/services/{id}', 'ServiceController@show');
+    Route::get('/services/{categoryid?}/{title?}', 'ServiceController@show');
     Route::post('/services', 'ServiceController@store');
     Route::put('/services/{id}', 'ServiceController@update');
     Route::delete('/services/{id}', 'ServiceController@destroy');
-
 
 });
 

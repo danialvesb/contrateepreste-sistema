@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ServiceController extends Controller
 {
@@ -24,7 +26,15 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        return response()->json($this->services->all());
+        return dd(auth()->user());
+        $result =DB::table('services')
+            ->select('services.id', 'services.title', 'services.description', 'services.file', 'services.created_at', 'services.updated_at', 'services.category_id', 'categories.title as category_title')
+            ->join('categories', function($join) {
+                $join->on('services.category_id', '=', 'categories.id');
+            })->get();
+
+
+        return response()->json($result);
     }
 
     /**
@@ -64,9 +74,22 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($categoryid = 0, $title = 'null')
     {
-        return response()->json($this->services->find($id));
+        //param espera receber título ou id da categoria
+
+        print_r($categoryid.$title);
+
+        $result =DB::table('services')
+            ->select('services.id', 'services.title', 'services.description', 'services.file', 'services.created_at', 'services.updated_at', 'services.category_id', 'categories.title as category_title')
+            ->join('categories', function($join) {
+                $join->on('services.category_id', '=', 'categories.id');
+            })->where('services.title', 'like', '%' . $title . '%')
+                ->orWhere('services.category_id', $categoryid)->get();
+
+
+        return response()->json($result);
+
     }
 
     /**

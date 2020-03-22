@@ -10,7 +10,7 @@ $factory->define(Service::class, function (Faker $faker) {
     return [
         'title' => $faker->name,
         'category_id' => 1,
-        'description' => $faker->text,
+        'description' => $faker->name,
         'file' => $faker->name
     ];
 });
