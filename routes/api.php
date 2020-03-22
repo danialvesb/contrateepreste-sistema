@@ -17,14 +17,12 @@ use Illuminate\Http\Request;
 //    Route::get('/users', 'UserController@index');
 //});
 
-
 Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 });
-
 
 Route::middleware(['apijwt'])->group(function () {
     Route::get('/users', 'UserController@index');
@@ -37,8 +35,6 @@ Route::middleware(['cors'])->group(function () {
 Route::middleware(['cors', 'apijwt'])->group(function () {
     //Rotas raizes devem ser colocadas depois pois evita que as mesmas vão substituam as rotas do subdomínio que possuem o mesmo caminho de URI.
 
-
-
     Route::get('/services/categories', 'CategoryController@index');
     Route::get('/services/categories/{id}', 'CategoryController@show');
     Route::post('/services/categories', 'CategoryController@store');
@@ -50,7 +46,6 @@ Route::middleware(['cors', 'apijwt'])->group(function () {
     Route::post('/services', 'ServiceController@store');
     Route::put('/services/{id}', 'ServiceController@update');
     Route::delete('/services/{id}', 'ServiceController@destroy');
-
 
 });
 

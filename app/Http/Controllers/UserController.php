@@ -19,7 +19,6 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-
         return response()->json($users);
     }
 
@@ -87,13 +86,11 @@ class UserController extends Controller
     }
 
     protected function userValidator($request) {
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users',
             'password' => 'required|max:100'
         ]);
-
         return $validator;
     }
 }
