@@ -2,6 +2,9 @@
 
 namespace App;
 
+
+use App\Models\Group;
+use App\Models\User\UserGroup;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -57,4 +60,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }}
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+    }
+}
