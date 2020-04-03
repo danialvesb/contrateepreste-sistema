@@ -14,11 +14,10 @@ class Service extends Model
         'category_id',
         'description',
         'file'
-
     ];
 
     public function category() {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 
 }

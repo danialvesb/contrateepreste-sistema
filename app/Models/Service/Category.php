@@ -10,7 +10,7 @@ class Category extends Model
     protected $fillable = ['id', 'title'];
 
     public function service() {
-        return $this->hasOne(Service::class, 'category_id');
+        return $this->belongsToMany(Service::class);
     }
 
 }

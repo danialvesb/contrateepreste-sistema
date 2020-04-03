@@ -19,8 +19,6 @@ class CreateServicesTable extends Migration
             $table->string('description', 102);
             $table->text('file');
             $table->timestamps();
-
-            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
