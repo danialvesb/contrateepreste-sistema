@@ -20,13 +20,11 @@ class CreateServicesCategories extends Migration
 
         Schema::table('services_categories', function (Blueprint $table) {
             $table->foreign('service_id')->references('id')->on('services')
-                ->onDelete('cascade')
-                ->onUpdate('restrict');
+                ->onDelete('cascade');
         });
         Schema::table('services_categories', function (Blueprint $table) {
             $table->foreign('category_id')->references('id')->on('categories')
-                ->onDelete('cascade')
-                ->onUpdate('restrict');
+                ->onDelete('restrict');
         });
 
     }

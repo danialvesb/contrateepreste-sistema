@@ -13,16 +13,16 @@ class CreateServicesFiles extends Migration
      */
     public function up()
     {
-        Schema::create('services_files', function (Blueprint $table) {
-            $table->integer('service_id');
-            $table->integer('file_id');
-            $table->timestamps();
+        Schema::create('files_relation_solicitation', function (Blueprint $table) {
+            $table->integer('solicitation_id')->unsigned();
+            $table->integer('file_id')->unsigned();
         });
-//        Schema::table('services_files', function (Blueprint $table) {
-//            $table->foreign('service_id')->references('id')->on('services');
-//            $table->foreign('file_id')->references('id')->on('files');
-//        });
-
+        Schema::table('files_relation_solicitation', function (Blueprint $table) {
+            $table->foreign('solicitation_id')->references('id')->on('solicitations')
+                ->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('files')
+                ->onDelete('cascade');  ;
+        });
     }
 
     /**

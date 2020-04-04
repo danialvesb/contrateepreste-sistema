@@ -17,10 +17,9 @@ class CreateSolicitations extends Migration
             $table->increments('id');
             $table->enum('status', ['pending', 'accepted', 'denied']);
             $table->text('message');
-            $table->timestamps();
             $table->integer('user_id')->unsigned();
             $table->integer('offer_id')->unsigned();
-
+            $table->timestamps();
         });
 
         Schema::table('solicitations', function (Blueprint $table) {

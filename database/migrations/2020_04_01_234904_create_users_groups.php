@@ -22,13 +22,11 @@ class CreateUsersGroups extends Migration
 
         Schema::table('users_groups', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')
-                ->onDelete('cascade')
-                ->onUpdate('restrict');
+                ->onDelete('cascade');
         });
         Schema::table('users_groups', function (Blueprint $table) {
             $table->foreign('group_id')->references('id')->on('groups')
-                ->onDelete('cascade')
-                ->onUpdate('restrict');
+                ->onDelete('restrict');
         });
 
 
