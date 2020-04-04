@@ -14,20 +14,19 @@ class CreateServicesCategories extends Migration
     public function up()
     {
         Schema::create('services_categories', function (Blueprint $table) {
-            $table->integer('service_id')->unsigned();
-            $table->integer('category_id')->unsigned();
+            $table->integer('service_id')->unsigned()->index();
+            $table->integer('category_id')->unsigned()->index();
         });
 
         Schema::table('services_categories', function (Blueprint $table) {
-            $table->foreign('service_id')->references('id')
-                ->on('services')
+            $table->foreign('service_id')->references('id')->on('services')
                 ->onDelete('cascade')
                 ->onUpdate('restrict');
-            $table->foreign('category_id')->references('categories')
-                ->on('id')
+        });
+        Schema::table('services_categories', function (Blueprint $table) {
+            $table->foreign('category_id')->references('id')->on('categories')
                 ->onDelete('cascade')
                 ->onUpdate('restrict');
-
         });
 
     }
