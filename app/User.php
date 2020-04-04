@@ -4,6 +4,7 @@ namespace App;
 
 
 use App\Models\Group;
+use App\Models\User\Solicitation;
 use App\Models\User\UserGroup;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -62,8 +63,15 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    //muitos pra muitos
     public function groups()
     {
         return $this->belongsToMany(Group::class);
+    }
+
+    //um pra muitos
+    public function solicitations()
+    {
+        return $this->hasMany(Solicitation::class);
     }
 }
