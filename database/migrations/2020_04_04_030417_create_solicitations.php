@@ -17,13 +17,13 @@ class CreateSolicitations extends Migration
             $table->increments('id');
             $table->enum('status', ['pending', 'accepted', 'denied']);
             $table->text('message');
-            $table->integer('user_id')->unsigned();
+            $table->integer('owner_id')->unsigned();
             $table->integer('offer_id')->unsigned();
             $table->timestamps();
         });
 
         Schema::table('solicitations', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')
+            $table->foreign('owner_id')->references('id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('restrict');
 

@@ -20,9 +20,6 @@ class CreateServicesTable extends Migration
             $table->string('image_path', 100);
             $table->timestamps();
         });
-//        Schema::table('services', function (Blueprint $table) {
-//            $table->foreign('file_group')->references('id')
-//        });
     }
 
     /**
@@ -32,6 +29,7 @@ class CreateServicesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('category_service');
         Schema::dropIfExists('files_relations_offer');
         Schema::dropIfExists('offers');
         Schema::dropIfExists('services');
