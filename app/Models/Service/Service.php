@@ -20,7 +20,7 @@ class Service extends Model
     }
 
     //um pra muitos
-    public function solicitations()
+    public function offers()
     {
         return $this->hasMany(Offer::class);
     }

@@ -22,7 +22,7 @@ class Solicitation extends Model
         return $this->belongsTo(Offer::class);
     }
 
-    public function file() {
+    public function files() {
         return $this->belongsToMany(File::class);
     }
 }

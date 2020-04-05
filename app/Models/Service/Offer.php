@@ -22,7 +22,7 @@ class Offer extends Model
         return $this->hasMany(Service::class);
     }
 
-    public function offer() {
+    public function files() {
         return $this->belongsToMany(File::class);
     }
 }
