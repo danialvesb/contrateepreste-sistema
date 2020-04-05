@@ -46,19 +46,21 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         try {
+            $service = new Service();
 
             $title = $request->json('title');
-            $category = $request->json('category');
             $description =  $request->json('description');
             $file = $request->json('file');
+            $categories = $request->json('categories');
 
 
-            $serviceJson = ['title'=>$title,
-                'category_id'=>$category,
+
+            $serviceData = ['title'=>$title,
                 'description'=>$description,
-                'file'=>$file];
+                'image_path'=>$file];
 
-            $this->services->create($serviceJson);
+
+            $service->save($serviceData, $categories);
 
             $returns =  ['data' => ['message' => 'Serviço Cadastrado Com Sucesso']];
             return response()->json($returns, 201);

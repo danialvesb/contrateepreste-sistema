@@ -4,17 +4,17 @@ namespace App\Models;
 
 use App\Models\Service\Category;
 use App\Models\Service\Offer;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Support\Facades\DB;
 
 
 class Service extends Model
 {
     protected $fillable = [
         'title',
-        'category_id',
         'description',
-        'file'
+        'image_path',
     ];
 
     public function category() {
@@ -26,4 +26,11 @@ class Service extends Model
     {
         return $this->hasMany(Offer::class);
     }
+
+    public function save($service, $categories)
+    {
+        $service->save();
+        $service->category()->attach($categories);
+    }
+
 }
