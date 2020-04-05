@@ -14,6 +14,7 @@ class Offer extends Model
         'service_id',
         'owner_id',
         'amount',
+        'rating',
         'description',
     ];
 
