@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('mobile', 100);
             $table->string('city', 100);
             $table->string('uf', 100);
+            $table->string('district', 100);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -26,6 +26,7 @@ $factory->define(User::class, function (Faker $faker) {
         'mobile' => '992147770',
         'city' => 'Goiânia',
         'uf' => 'GO',
+        'district' => 'Parque trenmendão',
         'remember_token' => Str::random(10),
     ];
 });
