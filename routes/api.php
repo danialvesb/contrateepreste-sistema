@@ -42,6 +42,8 @@ Route::middleware(['cors'])->group(function () {
     Route::delete('/services/categories/{id}', 'CategoryController@destroy');
 
     Route::get('/services/offers', 'OfferController@index');
+    Route::get('/services/offers/{id}', 'OfferController@show');
+    Route::post('/services/offers', 'OfferController@store');
 
     Route::get('/services', 'ServiceController@index');
     Route::get('/services/{id}', 'ServiceController@show');

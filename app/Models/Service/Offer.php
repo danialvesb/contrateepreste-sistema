@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model
 {
+    protected $fillable = [
+        'service_id',
+        'owner_id',
+        'amount',
+        'description',
+    ];
 
     //um pra muitos
     public function solicitations()

@@ -2,11 +2,25 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Service\Offer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OfferController extends Controller
 {
+
+    /**
+     * @var Offer
+     */
+    private $offers;
+
+    public function __construct(Offer $offer)
+    {
+        $this->offers = $offer;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -14,10 +28,10 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offers = Offer::all();
-
-
-
+        $offers = DB::table('offers')
+            ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('users', 'offers.owner_id', '=', 'users.id')
+            ->get();
 
         return response()->json($offers);
     }
@@ -30,7 +44,25 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $serviceId = $request->json('service_id');
+            $ownerId =  $request->json('owner_id');
+            $amount = $request->json('amount');
+            $description = $request->json('description');
+
+            $offerData = ['service_id'=>$serviceId,
+                'owner_id'=>$ownerId,
+                'amount'=>$amount,
+                'description'=>$description];
+
+            $offer =  $this->offers->create($offerData);
+
+            $returns =  ['data' => ['message' => 'Serviço ofertado com sucesso']];
+            return response()->json($returns, 201);
+
+        }catch(\Exception $e) {
+            return response()->json($e->getMessage(), 501);
+        }
     }
 
     /**
@@ -41,7 +73,16 @@ class OfferController extends Controller
      */
     public function show($id)
     {
-        //
+        $offers = DB::table('offers')
+            ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('users', 'offers.owner_id', '=', 'users.id')
+            ->where('offers.id','=', $id)
+            ->get();
+
+        //Implementar o retorno apenas dos dados necessários.
+
+        return response()->json($offers);
+
     }
 
     /**
