@@ -105,6 +105,15 @@ class OfferController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $offer = $this->offers->all()->find($id);
+            $offer->delete($offer);
+
+            $return = ['data' => ['message' => 'Oferta deletada com sucesso']];
+
+            return response()->json($return);
+        }catch (\Exception $e) {
+            response()->json($e->getMessage());
+        }
     }
 }

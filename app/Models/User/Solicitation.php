@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Solicitation extends Model
 {
+    protected $fillable = [
+        'status',
+        'message',
+        'owner_id',
+        'offer_id',
+    ];
 
     public function user()
     {

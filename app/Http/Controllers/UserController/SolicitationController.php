@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User\Solicitation;
 use Illuminate\Http\Request;
 
 class SolicitationController extends Controller
 {
+    private $solicitations;
+
+    public function __construct(Solicitation $solicitation)
+    {
+        $this->solicitations = $solicitation;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +32,25 @@ class SolicitationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $status = $request->json('status');
+            $message =  $request->json('message');
+            $ownerId = $request->json('owner_id');
+            $offerId = $request->json('offer_id');
+
+            $solicitationData = ['status'=>$status,
+                'message'=>$message,
+                'owner_id'=>$ownerId,
+                'offer_id'=>$offerId];
+
+            $solicitation =  $this->solicitations->create($solicitationData);
+
+            $returns =  ['data' => ['message' => 'Oferta solicitada com sucesso']];
+            return response()->json($returns, 201);
+
+        }catch(\Exception $e) {
+            return response()->json($e->getMessage(), 501);
+        }
     }
 
     /**
