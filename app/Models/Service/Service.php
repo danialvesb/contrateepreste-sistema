@@ -4,9 +4,7 @@ namespace App\Models;
 
 use App\Models\Service\Category;
 use App\Models\Service\Offer;
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 
 class Service extends Model
@@ -17,7 +15,7 @@ class Service extends Model
         'image_path',
     ];
 
-    public function category() {
+    public function categories() {
         return $this->belongsToMany(Category::class);
     }
 
@@ -25,12 +23,6 @@ class Service extends Model
     public function solicitations()
     {
         return $this->hasMany(Offer::class);
-    }
-
-    public function save($service, $categories)
-    {
-        $service->save();
-        $service->category()->attach($categories);
     }
 
 }

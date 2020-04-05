@@ -6,6 +6,7 @@ use App\Models\Service;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\New_;
 
 class ServiceController extends Controller
 {
@@ -26,8 +27,8 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        return dd(auth()->user());
-        $result =DB::table('services')
+
+        $result = DB::table('services')
             ->select('services.id', 'services.title', 'services.description', 'services.file', 'services.created_at', 'services.updated_at', 'services.category_id', 'categories.title as category_title')
             ->join('categories', function($join) {
                 $join->on('services.category_id', '=', 'categories.id');
@@ -46,23 +47,19 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         try {
-            $service = new Service();
-
             $title = $request->json('title');
             $description =  $request->json('description');
-            $file = $request->json('file');
+            $imagePath = $request->json('image_path');
             $categories = $request->json('categories');
-
-
 
             $serviceData = ['title'=>$title,
                 'description'=>$description,
-                'image_path'=>$file];
+                'image_path'=>$imagePath];
 
+            $service =  $this->services->create($serviceData);
+            $service->categories()->attach($categories);
 
-            $service->save($serviceData, $categories);
-
-            $returns =  ['data' => ['message' => 'Serviço Cadastrado Com Sucesso']];
+            $returns =  ['data' => ['message' => 'Serviço cadastrado com sucesso']];
             return response()->json($returns, 201);
 
         }catch(\Exception $e) {
@@ -76,22 +73,15 @@ class ServiceController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($categoryid = 0, $title = 'null')
+    public function show($id)
     {
-        //param espera receber título ou id da categoria
+        $service = Service::find($id);
 
-        print_r($categoryid.$title);
+        foreach ($service->categories as $category) {
+//            echo $category->pivot->category_id;
+        }
 
-        $result =DB::table('services')
-            ->select('services.id', 'services.title', 'services.description', 'services.file', 'services.created_at', 'services.updated_at', 'services.category_id', 'categories.title as category_title')
-            ->join('categories', function($join) {
-                $join->on('services.category_id', '=', 'categories.id');
-            })->where('services.title', 'like', '%' . $title . '%')
-                ->orWhere('services.category_id', $categoryid)->get();
-
-
-        return response()->json($result);
-
+        return response()->json($service, 501);
     }
 
     /**
