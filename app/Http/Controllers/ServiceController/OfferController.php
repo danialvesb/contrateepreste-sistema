@@ -16,6 +16,9 @@ class OfferController extends Controller
     {
         $offers = Offer::all();
 
+
+
+
         return response()->json($offers);
     }
 
