@@ -44,6 +44,7 @@ class CreateSolicitations extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('solicitations');
+//        Schema::dropIfExists('solicitations');
+
     }
 }

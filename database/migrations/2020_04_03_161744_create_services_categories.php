@@ -36,6 +36,6 @@ class CreateServicesCategories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('services_categories');
+//        Schema::dropIfExists('services_categories');
     }
 }

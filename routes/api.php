@@ -32,7 +32,7 @@ Route::middleware(['cors'])->group(function () {
     Route::post('/signup', 'UserController@store');
 });
 
-Route::middleware(['cors', 'apijwt'])->group(function () {
+Route::middleware(['cors'])->group(function () {
     //Rotas raizes devem ser colocadas depois pois evita que as mesmas vão substituam as rotas do subdomínio que possuem o mesmo caminho de URI.
 
     Route::get('/services/categories', 'CategoryController@index');

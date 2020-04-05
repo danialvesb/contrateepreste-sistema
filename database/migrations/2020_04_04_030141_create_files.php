@@ -29,6 +29,8 @@ class CreateFiles extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('files_relation_solicitation');
+        Schema::dropIfExists('files_relations_offer');
         Schema::dropIfExists('files');
     }
 }

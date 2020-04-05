@@ -18,8 +18,10 @@ class CreateFilesRelationsOffer extends Migration
             $table->integer('file_id')->unsigned();
         });
         Schema::table('files_relations_offer', function (Blueprint $table) {
-            $table->foreign('offer_id')->references('id')->on('offers');
-            $table->foreign('file_id')->references('id')->on('files');
+            $table->foreign('offer_id')->references('id')->on('offers')
+                ->onDelete('cascade');;
+            $table->foreign('file_id')->references('id')->on('files')
+                ->onDelete('cascade');
         });
     }
 
@@ -32,6 +34,6 @@ class CreateFilesRelationsOffer extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files_relations_offer');
+//        Schema::dropIfExists('files');
     }
 }

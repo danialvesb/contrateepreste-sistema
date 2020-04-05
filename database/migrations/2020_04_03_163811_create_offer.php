@@ -34,6 +34,8 @@ class CreateOffer extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offer');
+        Schema::dropIfExists('services_categories');
+        Schema::dropIfExists('solicitations');
+        Schema::dropIfExists('offers');
     }
 }

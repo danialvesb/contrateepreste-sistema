@@ -32,6 +32,6 @@ class CreateServicesFiles extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('services_files');
+
     }
 }
