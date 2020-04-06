@@ -85,6 +85,10 @@ class UserController extends Controller
         //
     }
 
+    public function userAuth() {
+
+    }
+
     protected function userValidator($request) {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:100',

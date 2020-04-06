@@ -1,10 +1,9 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Group;
 
-use \App\Models\Service;
-
-class ServicesTableSeeder extends Seeder
+class GroupsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +12,6 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Service::class, 50)->create();
+        factory(Group::class , 3)->create();
     }
 }

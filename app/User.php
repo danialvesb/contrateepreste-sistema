@@ -2,6 +2,11 @@
 
 namespace App;
 
+
+use App\Models\Group;
+use App\Models\Service\Offer;
+use App\Models\User\Solicitation;
+use App\Models\User\UserGroup;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'mobile', 'city', 'uf', 'district', 'photo'
     ];
 
     /**
@@ -57,4 +62,23 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }}
+    }
+
+    //muitos pra muitos
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+    }
+
+    //um pra muitos
+    public function solicitations()
+    {
+        return $this->hasMany(Solicitation::class);
+    }
+
+    //um pra muitos
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
+}

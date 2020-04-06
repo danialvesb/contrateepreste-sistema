@@ -3,22 +3,26 @@
 namespace App\Models;
 
 use App\Models\Service\Category;
+use App\Models\Service\Offer;
 use Illuminate\Database\Eloquent\Model;
-
 
 
 class Service extends Model
 {
     protected $fillable = [
         'title',
-        'category_id',
         'description',
-        'file'
-
+        'image_path',
     ];
 
-    public function category() {
-        return $this->belongsTo(Category::class);
+    public function categories() {
+        return $this->belongsToMany(Category::class);
+    }
+
+    //um pra muitos
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
     }
 
 }

@@ -14,14 +14,11 @@ class CreateServicesTable extends Migration
     public function up()
     {
         Schema::create('services', function (Blueprint $table) {
-            $table->integerIncrements('id');
+            $table->increments('id');
             $table->string('title', 100);
-            $table->unsignedInteger('category_id');
             $table->string('description', 102);
-            $table->text('file');
+            $table->string('image_path', 100);
             $table->timestamps();
-
-            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
@@ -32,6 +29,9 @@ class CreateServicesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('category_service');
+        Schema::dropIfExists('files_relations_offer');
+        Schema::dropIfExists('offers');
         Schema::dropIfExists('services');
     }
 }

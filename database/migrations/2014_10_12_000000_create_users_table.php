@@ -19,9 +19,15 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('photo', 100);
+            $table->string('mobile', 100);
+            $table->string('city', 100);
+            $table->string('uf', 100);
+            $table->string('district', 100);
             $table->rememberToken();
             $table->timestamps();
         });
+
     }
 
     /**
@@ -31,6 +37,9 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('users_groups');
+        Schema::dropIfExists('files_relation_solicitation');
+        Schema::dropIfExists('solicitations');
         Schema::dropIfExists('users');
     }
 }
