@@ -29,10 +29,12 @@ class OfferController extends Controller
     public function index()
     {
         $offers = DB::table('offers')
+            ->select('offers.id', 'offers.service_id', 'offers.owner_id', 'offers.amount', 'offers.description',
+                'offers.rating', 'services.title as service_title', 'services.description as service_description',
+                'users.name', 'users.email', 'users.mobile', 'users.city', 'users.uf', 'users.district')
             ->join('services', 'offers.service_id', '=', 'services.id')
             ->join('users', 'offers.owner_id', '=', 'users.id')
             ->get();
-
         return response()->json($offers);
     }
 
