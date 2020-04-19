@@ -68,7 +68,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $title = $request->json('title');
+            $category = Category::find($id);
+
+            $category->title = $title;
+            $category->save();
+            $return = ['data' => ['message' => 'Categoria atualizada com sucesso']];
+
+            return response()->json($return, 201);
+        }catch (\Exception $e) {
+            $return = ['data' => ['message' => $e->getMessage()]];
+            return response()->json($return);
+        }
     }
 
     /**
@@ -85,8 +97,8 @@ class CategoryController extends Controller
             $return = ['data' => ['message' => 'Categoria deletada com sucesso']];
             return response()->json($return, 201);
         }catch (\Exception $e) {
-            return response()->json($e->getMessage());
+            $return = ['data' => ['message' => 'Existem serviços vínculados a sua categoria, delete o serviço primeiro: '.$e->getMessage()]];
+            return response()->json($return);
         }
-
     }
 }
