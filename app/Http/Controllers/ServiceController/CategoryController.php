@@ -37,13 +37,10 @@ class CategoryController extends Controller
         try {
 
             $title = $request->json('title');
-
-
             $titleJson = ['title'=>$title];
-
             $this->categories->create($titleJson);
 
-            $returns =  ['data' => ['message' => 'Categoria Cadastrado Com Sucesso']];
+            $returns =  ['data' => ['message' => 'Categoria cadastrada com sucesso']];
             return response()->json($returns, 201);
 
         }catch(\Exception $e) {
