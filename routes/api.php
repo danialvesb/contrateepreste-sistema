@@ -24,7 +24,7 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('me', 'AuthController@me');
 });
 
-Route::middleware(['apijwt'])->group(function () {
+Route::middleware(['cors'])->group(function () {
     Route::get('/users', 'UserController@index');
 });
 
