@@ -53,7 +53,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+
+        return response()->json($category, 201);
     }
 
 
@@ -78,13 +80,12 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            $categorie = $this->categories->all()->find($id);
-            $categorie->delete($categorie);
+            $category = Category::find($id);
+            $category->delete($category);
             $return = ['data' => ['message' => 'Categoria deletada com sucesso']];
-
             return response()->json($return, 201);
         }catch (\Exception $e) {
-            response()->json($e->getMessage());
+            return response()->json($e->getMessage());
         }
 
     }

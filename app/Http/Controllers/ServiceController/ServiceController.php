@@ -84,7 +84,7 @@ class ServiceController extends Controller
 //            echo $category->pivot->category_id;
         }
 
-        return response()->json($service, 501);
+        return response()->json($service, 201);
     }
 
     /**
