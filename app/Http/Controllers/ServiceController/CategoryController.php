@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-
     private $categories;
 
     public function __construct(Category $category)
@@ -22,7 +21,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-
         return response()->json($this->categories->all());
     }
 
@@ -35,7 +33,6 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-
             $title = $request->json('title');
             $titleJson = ['title'=>$title];
             $this->categories->create($titleJson);
@@ -83,8 +80,7 @@ class CategoryController extends Controller
         try {
             $categorie = $this->categories->all()->find($id);
             $categorie->delete($categorie);
-
-            $return = ['data' => ['message' => 'Categoria Deletada Com Sucesso']];
+            $return = ['data' => ['message' => 'Categoria deletada com sucesso']];
 
             return response()->json($return);
         }catch (\Exception $e) {
