@@ -45,9 +45,7 @@ Route::group(['middleware' => 'cors', 'prefix' => 'services'], function ($router
     Route::put('/{id}', 'ServiceController@update');
     Route::delete('/offers/{id}', 'OfferController@destroy');
 
-
     Route::post('/offers/solicitations', 'SolicitationController@store');
-
 
     Route::get('/', 'ServiceController@index');
     Route::get('/{id}', 'ServiceController@show');
@@ -55,12 +53,9 @@ Route::group(['middleware' => 'cors', 'prefix' => 'services'], function ($router
     Route::put('/{id}', 'ServiceController@update');
     Route::delete('/{id}', 'ServiceController@destroy');
 
-
 //    Route::get('/services/{categoryid?}/{title?}', 'ServiceController@show');
 //    Route::post('/services', 'ServiceController@store');
 //    Route::put('/services/{id}', 'ServiceController@update');
 //    Route::delete('/services/{id}', 'ServiceController@destroy');
-
-
 });
 
