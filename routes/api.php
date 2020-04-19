@@ -32,30 +32,28 @@ Route::middleware(['cors'])->group(function () {
     Route::post('/signup', 'UserController@store');
 });
 
-Route::middleware(['cors'])->group(function () {
-    //Rotas raizes devem ser colocadas depois pois evita que as mesmas vão substituam as rotas do subdomínio que possuem o mesmo caminho de URI.
+Route::group(['middleware' => 'cors', 'prefix' => 'services'], function ($router) {
+    Route::get('/categories', 'CategoryController@index');
+    Route::get('/categories/{id}', 'CategoryController@show');
+    Route::post('/categories', 'CategoryController@store');
+    Route::delete('/categories/{id}', 'CategoryController@destroy');
+    Route::put('/categories/{id}', 'CategoryController@update');
 
-    Route::get('/services/categories', 'CategoryController@index');
-    Route::get('/services/categories/{id}', 'CategoryController@show');
-    Route::post('/services/categories', 'CategoryController@store');
-    Route::put('/services/categories/{id}', 'CategoryController@update');
-    Route::delete('/services/categories/{id}', 'CategoryController@destroy');
-
-    Route::get('/services/offers', 'OfferController@index');
-    Route::get('/services/offers/{id}', 'OfferController@show');
-    Route::post('/services/offers', 'OfferController@store');
-//    Route::put('/services/{id}', 'ServiceController@update');
-    Route::delete('/services/offers/{id}', 'OfferController@destroy');
+    Route::get('/offers', 'OfferController@index');
+    Route::get('/offers/{id}', 'OfferController@show');
+    Route::post('/offers', 'OfferController@store');
+    Route::put('/{id}', 'ServiceController@update');
+    Route::delete('/offers/{id}', 'OfferController@destroy');
 
 
-    Route::post('/services/offers/solicitations', 'SolicitationController@store');
+    Route::post('/offers/solicitations', 'SolicitationController@store');
 
 
-    Route::get('/services', 'ServiceController@index');
-    Route::get('/services/{id}', 'ServiceController@show');
-    Route::post('/services', 'ServiceController@store');
-    Route::put('/services/{id}', 'ServiceController@update');
-    Route::delete('/services/{id}', 'ServiceController@destroy');
+    Route::get('/', 'ServiceController@index');
+    Route::get('/{id}', 'ServiceController@show');
+    Route::post('/', 'ServiceController@store');
+    Route::put('/{id}', 'ServiceController@update');
+    Route::delete('/{id}', 'ServiceController@destroy');
 
 
 //    Route::get('/services/{categoryid?}/{title?}', 'ServiceController@show');

@@ -82,7 +82,7 @@ class CategoryController extends Controller
             $categorie->delete($categorie);
             $return = ['data' => ['message' => 'Categoria deletada com sucesso']];
 
-            return response()->json($return);
+            return response()->json($return, 201);
         }catch (\Exception $e) {
             response()->json($e->getMessage());
         }
