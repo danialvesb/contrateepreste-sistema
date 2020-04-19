@@ -124,7 +124,8 @@ class ServiceController extends Controller
 
             return response()->json($return);
         }catch (\Exception $e) {
-            response()->json($e->getMessage());
+            $return = ['data' => ['message' => 'Não é possível deletar serviços que tem ofertas '.$e->getMessage()]];
+            return response()->json($return);
         }
 
     }

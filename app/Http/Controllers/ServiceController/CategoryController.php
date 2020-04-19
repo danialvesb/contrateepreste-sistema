@@ -98,7 +98,7 @@ class CategoryController extends Controller
             return response()->json($return, 201);
         }catch (\Exception $e) {
             $return = ['data' => ['message' => 'Existem serviços vínculados a sua categoria, delete o serviço primeiro: '.$e->getMessage()]];
-            return response()->json($return);
+            return response()->json($return, 501);
         }
     }
 }
