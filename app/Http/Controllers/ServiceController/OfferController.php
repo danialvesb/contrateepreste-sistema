@@ -47,19 +47,19 @@ class OfferController extends Controller
     public function store(Request $request)
     {
         try {
-            $serviceId = $request->json('service_id');
-            $ownerId =  $request->json('owner_id');
-            $amount = $request->json('amount');
-            $rating = $request->json('rating');
-            $description = $request->json('description');
+//            $serviceId = $request->json('service_id');
+//            $ownerId =  $request->json('owner_id');
+//            $amount = $request->json('amount');
+//            $rating = $request->json('rating');
+//            $description = $request->json('description');
+//
+//            $offerData = ['service_id'=>$serviceId,
+//                'owner_id'=>$ownerId,
+//                'amount'=>$amount,
+//                'rating'=>$rating,
+//                'description'=>$description];
 
-            $offerData = ['service_id'=>$serviceId,
-                'owner_id'=>$ownerId,
-                'amount'=>$amount,
-                'rating'=>$rating,
-                'description'=>$description];
-
-            $offer =  $this->offers->create($offerData);
+            $offer =  $this->offers->create($request->all());
 
             $returns =  ['data' => ['message' => 'Serviço ofertado com sucesso']];
             return response()->json($returns, 201);

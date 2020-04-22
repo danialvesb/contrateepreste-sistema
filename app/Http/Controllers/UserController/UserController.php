@@ -31,7 +31,16 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = $this->userValidator($request);
-        $data = $request->all();
+        $name = $request->only('name')["name"];
+        $email = $request->only('email')["email"];
+        $password = $request->only('password')["password"];
+        $groups = $request->only('groups_id')["groups_id"];
+
+        $user = new User();
+        $user->fill(['name'  => $name,
+            'email' => $email,
+            'password' => Hash::make($password)]);
+
 
         if($validator->fails() ) {
             return response()->json([
@@ -39,14 +48,8 @@ class UserController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
-        $user = new User();
-
-        $user->fill($data);
-
-        $password = $request->only('password')["password"];
-        $user->password = Hash::make($password);
         $user->save();
+        $user->groups()->attach($groups);
 
         return response()->json($user, 201);
     }
