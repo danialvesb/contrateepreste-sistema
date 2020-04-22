@@ -24,11 +24,16 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
     Route::post('me', 'AuthController@me');
 });
 
-Route::middleware(['cors'])->group(function () {
-    Route::get('/users', 'UserController@index');
+Route::group(['middleware' => 'cors', 'prefix' => 'users'], function ($router) {
+
+    Route::get('/groups', 'GroupController@index');
+    Route::get('/', 'UserController@index');
+    Route::get('/{id}', 'UserController@show');
+
+
 });
 
-Route::middleware(['cors'])->group(function () {
+Route::group(['middleware' => 'cors'], function ($router) {
     Route::post('/signup', 'UserController@store');
 });
 
