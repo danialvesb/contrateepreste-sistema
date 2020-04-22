@@ -48,6 +48,8 @@ Route::group(['middleware' => 'cors', 'prefix' => 'services'], function ($router
     Route::post('/offers/solicitations', 'SolicitationController@store');
 
     Route::get('/', 'ServiceController@index');
+    Route::get('/details', 'ServiceController@index');
+
     Route::get('/{id}', 'ServiceController@show');
     Route::post('/', 'ServiceController@store');
     Route::put('/{id}', 'ServiceController@update');
