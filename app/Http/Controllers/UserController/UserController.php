@@ -30,11 +30,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->userValidator($request);
-        $name = $request->only('name')["name"];
-        $email = $request->only('email')["email"];
-        $password = $request->only('password')["password"];
-        $groups = $request->only('groups_id')["groups_id"];
+//        $validator = $this->userValidator($request);
+        $name = $request->json('name');
+        $email = $request->json('email');
+        $password = $request->json('password');
+        $groups = $request->json('groups_id');
 
         $user = new User();
         $user->fill(['name'  => $name,
@@ -42,12 +42,12 @@ class UserController extends Controller
             'password' => Hash::make($password)]);
 
 
-        if($validator->fails() ) {
-            return response()->json([
-                'message' => 'Validation Failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+//        if($validator->fails() ) {
+//            return response()->json([
+//                'message' => 'Validation Failed',
+//                'errors' => $validator->errors()
+//            ], 422);
+//        }
         $user->save();
         $user->groups()->attach($groups);
 
@@ -94,12 +94,12 @@ class UserController extends Controller
 
     }
 
-    protected function userValidator($request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|max:100'
-        ]);
-        return $validator;
-    }
+//    protected function userValidator($request) {
+//        $validator = Validator::make($request->all(), [
+//            'name' => 'required|max:100',
+//            'email' => 'required|email|unique:users',
+//            'password' => 'required|max:100',
+//        ]);
+//        return $validator;
+//    }
 }
