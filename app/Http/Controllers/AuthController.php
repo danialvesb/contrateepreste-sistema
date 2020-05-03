@@ -58,8 +58,6 @@ class AuthController extends Controller
             ->where('users.id', '=', $id)
             ->get();
 
-
-
         return response()->json($user[0]);
 //        return response()->json(auth()->user());
     }

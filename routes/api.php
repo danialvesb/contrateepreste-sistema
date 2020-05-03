@@ -22,12 +22,14 @@ Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
 });
 
 Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'users'], function ($router) {
-
     Route::get('/groups', 'GroupController@index');
     Route::get('/', 'UserController@index');
     Route::get('/{id}', 'UserController@show');
+});
 
-
+Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services/offers'], function ($router) {
+    Route::get('/solicitations', 'SolicitationController@index');
+    Route::post('/solicitations', 'SolicitationController@store');
 });
 
 Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function ($router) {
@@ -35,17 +37,6 @@ Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function (
     Route::get('/{id}', 'OfferController@show');
     Route::post('/', 'OfferController@store');
     Route::delete('/{id}', 'OfferController@destroy');
-});
-
-
-Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services'], function ($router) {
-    Route::get('/', 'ServiceController@index');
-    Route::get('/details', 'ServiceController@index');
-    Route::put('/{id}', 'ServiceController@update');
-    Route::get('/{id}', 'ServiceController@show');
-    Route::post('/', 'ServiceController@store');
-    Route::put('/{id}', 'ServiceController@update');
-    Route::delete('/{id}', 'ServiceController@destroy');
 });
 
 Route::group(['middleware' => 'cors', 'prefix' => 'services/categories'], function ($router) {
@@ -56,7 +47,12 @@ Route::group(['middleware' => 'cors', 'prefix' => 'services/categories'], functi
     Route::put('/{id}', 'CategoryController@update');
 });
 
-Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function ($router) {
-    Route::get('/solicitations', 'SolicitationController@index');
-    Route::post('/solicitations', 'SolicitationController@store');
+Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services'], function ($router) {
+    Route::get('/', 'ServiceController@index');
+    Route::get('/details', 'ServiceController@index');
+    Route::put('/{id}', 'ServiceController@update');
+    Route::get('/{id}', 'ServiceController@show');
+    Route::post('/', 'ServiceController@store');
+    Route::put('/{id}', 'ServiceController@update');
+    Route::delete('/{id}', 'ServiceController@destroy');
 });

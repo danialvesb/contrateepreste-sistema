@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User\Solicitation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SolicitationController extends Controller
 {
@@ -21,8 +22,15 @@ class SolicitationController extends Controller
      */
     public function index()
     {
-        $solicitations = $this->solicitations::all();
+        $id = auth()->user()->id;
 
+        $solicitations = DB::table('solicitations')
+            ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
+            ->join('services', 'offers.service_id', '=', 'services.id')
+            ->select('solicitations.id', 'solicitations.status', 'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description', 'services.title as type_service')
+            ->where('solicitations.owner_id', '=', $id)
+            ->get();
+        //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
         return response()->json($solicitations);
     }
 
