@@ -18,13 +18,14 @@ use Illuminate\Http\Request;
 //});
 
 Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
-    Route::post('login', 'AuthController@login');
-    Route::post('logout', 'AuthController@logout');
-    Route::post('refresh', 'AuthController@refresh');
-    Route::post('me', 'AuthController@me');
+    Route::post('/signup', 'UserController@store');
+    Route::post('/login', 'AuthController@login');
+    Route::post('/logout', 'AuthController@logout');
+    Route::post('/refresh', 'AuthController@refresh');
+    Route::post('/me', 'AuthController@me');
 });
 
-Route::group(['middleware' => 'cors', 'prefix' => 'users'], function ($router) {
+Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'users'], function ($router) {
 
     Route::get('/groups', 'GroupController@index');
     Route::get('/', 'UserController@index');
@@ -33,36 +34,33 @@ Route::group(['middleware' => 'cors', 'prefix' => 'users'], function ($router) {
 
 });
 
-Route::group(['middleware' => 'cors'], function ($router) {
-    Route::post('/signup', 'UserController@store');
+Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function ($router) {
+    Route::get('/', 'OfferController@index');
+    Route::get('/{id}', 'OfferController@show');
+    Route::post('/', 'OfferController@store');
+    Route::delete('/{id}', 'OfferController@destroy');
 });
 
-Route::group(['middleware' => 'cors', 'prefix' => 'services'], function ($router) {
-    Route::get('/categories', 'CategoryController@index');
-    Route::get('/categories/{id}', 'CategoryController@show');
-    Route::post('/categories', 'CategoryController@store');
-    Route::delete('/categories/{id}', 'CategoryController@destroy');
-    Route::put('/categories/{id}', 'CategoryController@update');
 
-    Route::get('/offers', 'OfferController@index');
-    Route::get('/offers/{id}', 'OfferController@show');
-    Route::post('/offers', 'OfferController@store');
-    Route::put('/{id}', 'ServiceController@update');
-    Route::delete('/offers/{id}', 'OfferController@destroy');
-
-    Route::post('/offers/solicitations', 'SolicitationController@store');
-
+Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services'], function ($router) {
     Route::get('/', 'ServiceController@index');
     Route::get('/details', 'ServiceController@index');
-
+    Route::put('/{id}', 'ServiceController@update');
     Route::get('/{id}', 'ServiceController@show');
     Route::post('/', 'ServiceController@store');
     Route::put('/{id}', 'ServiceController@update');
     Route::delete('/{id}', 'ServiceController@destroy');
-
-//    Route::get('/services/{categoryid?}/{title?}', 'ServiceController@show');
-//    Route::post('/services', 'ServiceController@store');
-//    Route::put('/services/{id}', 'ServiceController@update');
-//    Route::delete('/services/{id}', 'ServiceController@destroy');
 });
 
+Route::group(['middleware' => 'cors', 'prefix' => 'services/categories'], function ($router) {
+    Route::get('/', 'CategoryController@index');
+    Route::get('//{id}', 'CategoryController@show');
+    Route::post('/', 'CategoryController@store');
+    Route::delete('/{id}', 'CategoryController@destroy');
+    Route::put('/{id}', 'CategoryController@update');
+});
+
+Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function ($router) {
+    Route::get('/solicitations', 'SolicitationController@index');
+    Route::post('/solicitations', 'SolicitationController@store');
+});

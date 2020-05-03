@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -30,6 +31,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
 //        $validator = $this->userValidator($request);
         $name = $request->json('name');
         $email = $request->json('email');
@@ -40,7 +42,6 @@ class UserController extends Controller
         $user->fill(['name'  => $name,
             'email' => $email,
             'password' => Hash::make($password)]);
-
 
 //        if($validator->fails() ) {
 //            return response()->json([

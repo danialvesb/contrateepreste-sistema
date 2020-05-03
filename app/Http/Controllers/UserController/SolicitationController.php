@@ -21,7 +21,9 @@ class SolicitationController extends Controller
      */
     public function index()
     {
-        //
+        $solicitations = $this->solicitations::all();
+
+        return response()->json($solicitations);
     }
 
     /**
@@ -37,6 +39,9 @@ class SolicitationController extends Controller
             $message =  $request->json('message');
             $ownerId = $request->json('owner_id');
             $offerId = $request->json('offer_id');
+
+            $files = $request->json('files');
+            //Files vai criar o registro em files depois criar a relação com solicitation
 
             $solicitationData = ['status'=>$status,
                 'message'=>$message,
