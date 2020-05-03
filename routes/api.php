@@ -32,6 +32,10 @@ Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services/offers']
     Route::post('/solicitations', 'SolicitationController@store');
 });
 
+Route::group(['middleware'=> ['cors', 'apijwt'], 'prefix'=>'services/offers'], function ($router) {
+    Route::get('/calleds', 'SolicitationController@calleds');
+});
+
 Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function ($router) {
     Route::get('/', 'OfferController@index');
     Route::get('/{id}', 'OfferController@show');

@@ -24,15 +24,34 @@ class SolicitationController extends Controller
     {
         $id = auth()->user()->id;
 
-        $solicitations = DB::table('solicitations')
+        $data = DB::table('solicitations')
             ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
             ->join('services', 'offers.service_id', '=', 'services.id')
             ->select('solicitations.id', 'solicitations.status', 'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description', 'services.title as type_service')
             ->where('solicitations.owner_id', '=', $id)
             ->get();
         //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
-        return response()->json($solicitations);
+        return response()->json($data);
     }
+
+    public function calleds(){
+        $id = auth()->user()->id;
+
+        $data = DB::table('solicitations')
+            ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
+            ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('users', 'solicitations.owner_id', '=', 'users.id')
+            ->select('users.name as customer','users.uf as uf_customer','users.city as city_customer',
+                'users.district as district_customer', 'solicitations.id', 'solicitations.status',
+                'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description',
+                'services.title as type_service')
+            ->where('offers.owner_id', '=', $id)
+            ->get();
+
+        return response()->json($data);
+
+    }
+
 
     /**
      * Store a newly created resource in storage.
