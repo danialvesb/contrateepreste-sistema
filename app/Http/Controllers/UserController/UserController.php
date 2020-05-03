@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use Validator;
@@ -52,7 +53,14 @@ class UserController extends Controller
         $user->save();
         $user->groups()->attach($groups);
 
-        return response()->json($user, 201);
+        $created = DB::table('users')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->select('users.*', 'groups.name as group')
+            ->where('users.id', '=', $user->id)
+            ->get();
+
+        return response()->json($created[0], 201);
     }
 
     /**
