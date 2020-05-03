@@ -60,8 +60,7 @@ class AuthController extends Controller
 
 
 
-
-        return response()->json($user);
+        return response()->json($user[0]);
 //        return response()->json(auth()->user());
     }
 
