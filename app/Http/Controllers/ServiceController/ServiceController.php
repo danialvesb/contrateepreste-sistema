@@ -27,16 +27,10 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::all();
 
-        foreach ($services as $service) {
-            foreach ($service->categories as $category) {
-
-            }
-
-//            echo $category->pivot->category_id;
-        }
-
+        $services = DB::table('services')
+            ->select('*')
+            ->get();
 
         return response()->json($services);
     }

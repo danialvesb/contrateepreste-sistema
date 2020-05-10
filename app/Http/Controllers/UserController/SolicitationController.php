@@ -49,9 +49,28 @@ class SolicitationController extends Controller
             ->get();
 
         return response()->json($data);
-
     }
 
+    public function acceptCalled($id) {
+        $idUser = auth()->user()->id;
+        if ($idUser) {
+            DB::table('solicitations')
+                ->where('id', $id)
+                ->update(['status' => 'accepted']);
+        }
+
+        return response()->json('called successfully agreed');
+    }
+    public function refuseCalled($id) {
+        $idUser = auth()->user()->id;
+        if ($idUser) {
+            DB::table('solicitations')
+                ->where('id', $id)
+                ->update(['status' => 'denied']);
+        }
+
+        return response()->json('called successfully declined');
+    }
 
     /**
      * Store a newly created resource in storage.
