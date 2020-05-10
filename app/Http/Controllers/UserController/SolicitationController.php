@@ -45,7 +45,7 @@ class SolicitationController extends Controller
                 'users.district as district_customer', 'solicitations.id', 'solicitations.status',
                 'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description',
                 'services.title as type_service')
-            ->where('offers.owner_id', '=', $id)
+            ->where([['offers.owner_id', '=', $id], ['solicitations.status', '=', 'pending']])
             ->get();
 
         return response()->json($data);
