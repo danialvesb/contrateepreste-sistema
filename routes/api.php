@@ -37,6 +37,7 @@ Route::group(['middleware'=> ['cors', 'apijwt'], 'prefix'=>'services/offers'], f
     Route::post('/calleds/end/{id}', 'SolicitationController@endCalled');
     Route::post('/calleds/close/{id}', 'SolicitationController@closeCalled');
     Route::post('/calleds/refuse/{id}', 'SolicitationController@refuseCalled');
+    Route::get('/calleds/management', 'SolicitationController@calledsManagement');
     Route::get('/calleds', 'SolicitationController@calleds');
 
 });

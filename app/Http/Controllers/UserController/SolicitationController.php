@@ -28,7 +28,7 @@ class SolicitationController extends Controller
             ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
             ->join('services', 'offers.service_id', '=', 'services.id')
             ->select('solicitations.id', 'solicitations.status', 'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description', 'services.title as type_service')
-            ->where('solicitations.owner_id', '=', $id)
+            ->where([['solicitations.owner_id', '=', $id], ['solicitations.status', '!=', 'denied'], ['solicitations.status', '!=', 'closed']])
             ->get();
         //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
         return response()->json($data);
@@ -50,6 +50,24 @@ class SolicitationController extends Controller
 
         return response()->json($data);
     }
+    public function calledsManagement(){
+        $id = auth()->user()->id;
+
+        $data = DB::table('solicitations')
+            ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
+            ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('users', 'solicitations.owner_id', '=', 'users.id')
+            ->select('users.name as customer','users.uf as uf_customer','users.city as city_customer',
+                'users.district as district_customer', 'solicitations.id', 'solicitations.status',
+                'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description',
+                'services.title as type_service')
+            ->where([['offers.owner_id', '=', $id], ['solicitations.status', '=', 'accepted']])
+            ->get();
+
+        return response()->json($data);
+    }
+
+
 
     public function acceptCalled($id) {
         $idUser = auth()->user()->id;
