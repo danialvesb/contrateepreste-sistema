@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Str;
 use Validator;
 //Passar o validator para a model
 
@@ -34,15 +34,30 @@ class UserController extends Controller
     {
 
 //        $validator = $this->userValidator($request);
-        $name = $request->json('name');
-        $email = $request->json('email');
-        $password = $request->json('password');
-        $groups = $request->json('groups_id');
+        $data = $request->all();
+
+        $name = $data['name'];
+        $email = $data['email'];
+        $password = $data['password'];
+        $groups = $data['groups_id'];
 
         $user = new User();
-        $user->fill(['name'  => $name,
-            'email' => $email,
-            'password' => Hash::make($password)]);
+
+        if($request->hasFile('photo') && $request->file('photo')->isValid()){
+            $nameFIle = Str::kebab($name).Str::kebab(date('Y-m-d H:i'));
+            $namePhotoFormat = preg_replace('/[^a-zA-Z0-9_]/', '', $nameFIle);
+            $extPhoto = $request->photo->extension();
+            $nameFIleAndExt = "{$namePhotoFormat}.{$extPhoto}";
+
+            $occurrenceOfUsers = DB::select('SELECT COUNT(users.id) FROM users WHERE users.email = :email', ['email' => $email]);
+
+            if (json_encode($occurrenceOfUsers[0])[19] === '0'){
+                $upload = $request->photo->storeAs('/images/profile', $nameFIleAndExt);
+                $user->fill(['name'  => $name, 'email' => $email, 'password' => Hash::make($password), 'photo' => $upload]);
+            }
+        }else {
+            $user->fill(['name'  => $name, 'email' => $email, 'password' => Hash::make($password)]);
+        }
 
 //        if($validator->fails() ) {
 //            return response()->json([
@@ -76,16 +91,38 @@ class UserController extends Controller
         return response()->json($user) ;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $data = $request->all();
+        $user = auth()->user();
+        dd($data);
+        $newMobile = $data['mobile'];
+        $newCity = $data['city'];
+        $newUf = $data['uf'];
+        $newDistrict = $data['district'];
+
+        $data['photo'] = $user->photo;
+        if($request->hasFile('photo') && $request->file('photo')->isValid()){
+            if ($user->photo)
+                $name = $user->photo;
+            else
+                $name = $user->id.Str::kebab($user->name);
+
+            $name = preg_replace('/[^a-zA-Z0-9_]/', '', $name);
+            $extenstion = $request->photo->extension();
+            $nameFIle = "{$name}.{$extenstion}";
+
+            $upload = $request->photo->storeAs('/images/profile', $nameFIle);
+
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update(['mobile' => $newMobile], ['city' => $newCity], ['uf' => $newUf], ['district' => $newDistrict], ['photo' => $upload]);
+            if ($upload) {
+                return response()->json('sucess');
+            }else {
+                return response()->json('error');
+            }
+        }
     }
 
     /**

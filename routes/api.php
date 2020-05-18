@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,18 +11,30 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::group(['middleware' => 'api', 'prefix' => 'auth'], function ($router) {
+Route::resource('files', 'FileController');
+
+Route::group(['middleware' => ['cors'], 'prefix' => 'auth'], function ($router) {
     Route::post('/signup', 'UserController@store');
+});
+
+Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'auth'], function ($router) {
+    Route::put('/me/update', 'UserController@update');
+});
+
+Route::group(['middleware' => ['api'], 'prefix' => 'auth'], function ($router) {
     Route::post('/login', 'AuthController@login');
     Route::post('/logout', 'AuthController@logout');
     Route::post('/refresh', 'AuthController@refresh');
     Route::post('/me', 'AuthController@me');
 });
 
-Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'users'], function ($router) {
+Route::group(['middleware' => ['cors'], 'prefix' => 'users'], function ($router) {
     Route::get('/groups', 'GroupController@index');
-    Route::get('/', 'UserController@index');
+});
+
+Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'users'], function ($router) {
     Route::get('/{id}', 'UserController@show');
+    Route::get('/', 'UserController@index');
 });
 
 Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services/offers'], function ($router) {
