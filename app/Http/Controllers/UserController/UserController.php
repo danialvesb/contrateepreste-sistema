@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Str;
 use Validator;
 //Passar o validator para a model
 
@@ -30,25 +33,50 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->userValidator($request);
+
+//        $validator = $this->userValidator($request);
         $data = $request->all();
 
-        if($validator->fails() ) {
-            return response()->json([
-                'message' => 'Validation Failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $name = $data['name'];
+        $email = $data['email'];
+        $password = $data['password'];
+        $groups = $data['groups_id'];
 
         $user = new User();
 
-        $user->fill($data);
+        if($request->hasFile('photo') && $request->file('photo')->isValid()){
+            $nameFIle = Str::kebab($name).Str::kebab(date('Y-m-d H:i'));
+            $namePhotoFormat = preg_replace('/[^a-zA-Z0-9_]/', '', $nameFIle);
+            $extPhoto = $request->photo->extension();
+            $nameFIleAndExt = "{$namePhotoFormat}.{$extPhoto}";
 
-        $password = $request->only('password')["password"];
-        $user->password = Hash::make($password);
+            $occurrenceOfUsers = DB::select('SELECT COUNT(users.id) FROM users WHERE users.email = :email', ['email' => $email]);
+
+            if (json_encode($occurrenceOfUsers[0])[19] === '0'){
+                $upload = $request->photo->storeAs('/images/profile', $nameFIleAndExt);
+                $user->fill(['name'  => $name, 'email' => $email, 'password' => Hash::make($password), 'photo' => $upload]);
+            }
+        }else {
+            $user->fill(['name'  => $name, 'email' => $email, 'password' => Hash::make($password)]);
+        }
+
+//        if($validator->fails() ) {
+//            return response()->json([
+//                'message' => 'Validation Failed',
+//                'errors' => $validator->errors()
+//            ], 422);
+//        }
         $user->save();
+        $user->groups()->attach($groups);
 
-        return response()->json($user, 201);
+        $created = DB::table('users')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->select('users.*', 'groups.name as group')
+            ->where('users.id', '=', $user->id)
+            ->get();
+
+        return response()->json($created[0], 201);
     }
 
     /**
@@ -59,19 +87,14 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::all()->find($id);
+
+        return response()->json($user) ;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+
     }
 
     /**
@@ -89,12 +112,12 @@ class UserController extends Controller
 
     }
 
-    protected function userValidator($request) {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|max:100'
-        ]);
-        return $validator;
-    }
+//    protected function userValidator($request) {
+//        $validator = Validator::make($request->all(), [
+//            'name' => 'required|max:100',
+//            'email' => 'required|email|unique:users',
+//            'password' => 'required|max:100',
+//        ]);
+//        return $validator;
+//    }
 }

@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-
     private $categories;
 
     public function __construct(Category $category)
@@ -22,7 +21,6 @@ class CategoryController extends Controller
      */
     public function index()
     {
-
         return response()->json($this->categories->all());
     }
 
@@ -35,15 +33,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-
             $title = $request->json('title');
-
-
             $titleJson = ['title'=>$title];
-
             $this->categories->create($titleJson);
 
-            $returns =  ['data' => ['message' => 'Categoria Cadastrado Com Sucesso']];
+            $returns =  ['data' => ['message' => 'Categoria cadastrada com sucesso']];
             return response()->json($returns, 201);
 
         }catch(\Exception $e) {
@@ -59,7 +53,9 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = Category::find($id);
+
+        return response()->json($category, 201);
     }
 
 
@@ -72,7 +68,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $title = $request->json('title');
+            $category = Category::find($id);
+
+            $category->title = $title;
+            $category->save();
+            $return = ['data' => ['message' => 'Categoria atualizada com sucesso']];
+
+            return response()->json($return, 201);
+        }catch (\Exception $e) {
+            $return = ['data' => ['message' => $e->getMessage()]];
+            return response()->json($return);
+        }
     }
 
     /**
@@ -84,15 +92,13 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         try {
-            $categorie = $this->categories->all()->find($id);
-            $categorie->delete($categorie);
-
-            $return = ['data' => ['message' => 'Categoria Deletada Com Sucesso']];
-
-            return response()->json($return);
+            $category = Category::find($id);
+            $category->delete($category);
+            $return = ['data' => ['message' => 'Categoria deletada com sucesso']];
+            return response()->json($return, 201);
         }catch (\Exception $e) {
-            response()->json($e->getMessage());
+            $return = ['data' => ['message' => 'Existem serviços vínculados a sua categoria, delete o serviço primeiro: '.$e->getMessage()]];
+            return response()->json($return, 501);
         }
-
     }
 }

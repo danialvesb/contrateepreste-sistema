@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Psy\Util\Json;
 
 class AuthController extends Controller
 {
@@ -46,7 +49,16 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $id = auth()->user()->id;
+
+        $user = DB::table('users')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->select('users.*', 'groups.name as group')
+            ->where('users.id', '=', $id)
+            ->get();
+
+        return response()->json($user[0]);
     }
 
     /**

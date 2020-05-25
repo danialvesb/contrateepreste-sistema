@@ -27,16 +27,10 @@ class ServiceController extends Controller
      */
     public function index()
     {
-        $services = Service::all();
 
-        foreach ($services as $service) {
-            foreach ($service->categories as $category) {
-
-            }
-
-//            echo $category->pivot->category_id;
-        }
-
+        $services = DB::table('services')
+            ->select('*')
+            ->get();
 
         return response()->json($services);
     }
@@ -84,7 +78,7 @@ class ServiceController extends Controller
 //            echo $category->pivot->category_id;
         }
 
-        return response()->json($service, 501);
+        return response()->json($service, 201);
     }
 
     /**
@@ -124,7 +118,8 @@ class ServiceController extends Controller
 
             return response()->json($return);
         }catch (\Exception $e) {
-            response()->json($e->getMessage());
+            $return = ['data' => ['message' => 'Não é possível deletar serviços que tem ofertas '.$e->getMessage()]];
+            return response()->json($return);
         }
 
     }

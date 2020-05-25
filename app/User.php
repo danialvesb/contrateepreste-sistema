@@ -67,7 +67,7 @@ class User extends Authenticatable implements JWTSubject
     //muitos pra muitos
     public function groups()
     {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsToMany(Group::class, 'users_groups');
     }
 
     //um pra muitos
