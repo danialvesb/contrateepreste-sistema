@@ -15,11 +15,6 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
-//header('Access-Control-Allow-Origin: *');
-//header('Access-Control-Allow-Methods: *');
-//header('Access-Control-Allow-Headers: *');
-
-
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
@@ -30,7 +25,6 @@ $app = new Illuminate\Foundation\Application(
 | incoming requests to this application from both the web and CLI.
 |
 */
-
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
@@ -46,6 +40,8 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
+
+
 
 /*
 |--------------------------------------------------------------------------

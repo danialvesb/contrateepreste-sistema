@@ -1,25 +1,15 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 Route::resource('files', 'FileController');
 
-Route::group(['middleware' => ['cors'], 'prefix' => 'auth'], function ($router) {
+Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/signup', 'UserController@store');
 });
 
-Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'auth'], function ($router) {
-    Route::put('/me/update', 'UserController@update');
+Route::group(['middleware' => 'apijwt'], function ($router) {
+    Route::put('/me/update', 'ManagerProfileMeController@update');
 });
+
 
 Route::group(['middleware' => ['api'], 'prefix' => 'auth'], function ($router) {
     Route::post('/login', 'AuthController@login');
@@ -28,21 +18,21 @@ Route::group(['middleware' => ['api'], 'prefix' => 'auth'], function ($router) {
     Route::post('/me', 'AuthController@me');
 });
 
-Route::group(['middleware' => ['cors'], 'prefix' => 'users'], function ($router) {
+Route::group(['prefix' => 'users'], function ($router) {
     Route::get('/groups', 'GroupController@index');
 });
 
-Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'users'], function ($router) {
+Route::group(['middleware' => ['apijwt'], 'prefix' => 'users'], function ($router) {
     Route::get('/{id}', 'UserController@show');
     Route::get('/', 'UserController@index');
 });
 
-Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services/offers'], function ($router) {
+Route::group(['middleware' => ['apijwt'], 'prefix' => 'services/offers'], function ($router) {
     Route::get('/solicitations', 'SolicitationController@index');
     Route::post('/solicitations', 'SolicitationController@store');
 });
 
-Route::group(['middleware'=> ['cors', 'apijwt'], 'prefix'=>'services/offers'], function ($router) {
+Route::group(['middleware'=> ['apijwt'], 'prefix'=>'services/offers'], function ($router) {
     Route::post('/calleds/accept/{id}', 'SolicitationController@acceptCalled');
     Route::post('/calleds/end/{id}', 'SolicitationController@endCalled');
     Route::post('/calleds/close/{id}', 'SolicitationController@closeCalled');
@@ -52,14 +42,14 @@ Route::group(['middleware'=> ['cors', 'apijwt'], 'prefix'=>'services/offers'], f
 
 });
 
-Route::group(['middleware' => 'cors', 'prefix' => 'services/offers'], function ($router) {
+Route::group(['prefix' => 'services/offers'], function ($router) {
     Route::get('/', 'OfferController@index');
     Route::get('/{id}', 'OfferController@show');
     Route::post('/', 'OfferController@store');
     Route::delete('/{id}', 'OfferController@destroy');
 });
 
-Route::group(['middleware' => 'cors', 'prefix' => 'services/categories'], function ($router) {
+Route::group(['prefix' => 'services/categories'], function ($router) {
     Route::get('/', 'CategoryController@index');
     Route::get('//{id}', 'CategoryController@show');
     Route::post('/', 'CategoryController@store');
@@ -67,7 +57,7 @@ Route::group(['middleware' => 'cors', 'prefix' => 'services/categories'], functi
     Route::put('/{id}', 'CategoryController@update');
 });
 
-Route::group(['middleware' => ['cors', 'apijwt'], 'prefix' => 'services'], function ($router) {
+Route::group(['middleware' => ['apijwt'], 'prefix' => 'services'], function ($router) {
     Route::get('/', 'ServiceController@index');
     Route::get('/details', 'ServiceController@index');
     Route::put('/{id}', 'ServiceController@update');
