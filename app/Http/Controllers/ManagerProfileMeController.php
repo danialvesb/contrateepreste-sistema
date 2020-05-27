@@ -50,36 +50,31 @@ class ManagerProfileMeController extends Controller
      */
     public function update(Request $request)
     {
-        $data = $request->all();
+        $dataRec = $request->all();
         $user = auth()->user();
-        $newMobile = $data['mobile'];
-        $newCity = $data['city'];
-        $newUf = $data['uf'];
-        $newDistrict = $data['district'];
+        $newMobile = $dataRec['mobile'];
+        $newCity = $dataRec['city'];
+        $newUf = $dataRec['uf'];
+        $newDistrict = $dataRec['district'];
 
+        $data['photo'] = $user->image;
         if($request->hasFile('photo') && $request->file('photo')->isValid()){
 
             if ($user->photo) {
                 $name = $user->photo;
-
-                $request->photo->storeAs('/images/profile', $data['photo']);
             }else {
                 $name = $user->id.Str::kebab($user->name);
                 $name = preg_replace('/[^a-zA-Z0-9_]/', '', $name);
                 $extenstion = $request->photo->extension();
                 $name = $name.".".$extenstion;
-
-                $name = $request->photo->storeAs('/images/profile', $name);
-
             }
-            print_r($name);
 
+            $upload = $request->photo->storeAs('/images/profile', $name);
 
-
-            if ($name != $user->photo) {
+            if ($upload) {
                 DB::table('users')
                     ->where('id', $user->id)
-                    ->update(['photo' => $name]);
+                    ->update(['photo' => $name, 'mobile' => $newMobile, 'city' => $newCity, 'uf' => $newUf, 'district' => $newDistrict]);
             }
 
             if ($name) {
