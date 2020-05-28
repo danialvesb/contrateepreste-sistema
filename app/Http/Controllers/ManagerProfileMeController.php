@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+
 
 class ManagerProfileMeController extends Controller
 {
@@ -84,6 +85,23 @@ class ManagerProfileMeController extends Controller
             }
         }
         return response()->json('sucess');
+    }
+
+    public function getImgProfile($fileName) {
+        $base_path = '\images\profile\\';
+        $path = storage_path('app\public'.$base_path.$fileName);
+
+        if (!File::exists($path)) {
+            abort(404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+
+        $response = \Illuminate\Support\Facades\Response::make($file, 200);
+        $response->header("Content-Type", $type);
+
+        return $response;
     }
 
     /**

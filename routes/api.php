@@ -6,10 +6,13 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/signup', 'UserController@store');
 });
 
-Route::group(['middleware' => 'apijwt'], function ($router) {
-    Route::put('/me/update', 'ManagerProfileMeController@update');
-});
+Route::group(['prefix' => 'me'], function ($router) {
+    Route::get('/_image/profile/{file_name}', 'ManagerProfileMeController@getImgProfile');
 
+    Route::group(['middleware' => 'apijwt'], function ($router) {
+        Route::put('/update', 'ManagerProfileMeController@update');
+    });
+});
 
 Route::group(['middleware' => ['api'], 'prefix' => 'auth'], function ($router) {
     Route::post('/login', 'AuthController@login');
