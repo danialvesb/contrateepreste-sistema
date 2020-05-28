@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -78,13 +79,13 @@ class ManagerProfileMeController extends Controller
                     ->update(['photo' => $name, 'mobile' => $newMobile, 'city' => $newCity, 'uf' => $newUf, 'district' => $newDistrict]);
             }
 
-            if ($name) {
-                return response()->json('sucess');
-            }else {
-                return response()->json('error');
-            }
         }
-        return response()->json('sucess');
+        DB::table('users')
+            ->where('id', $user->id)
+            ->update(['mobile' => $newMobile, 'city' => $newCity, 'uf' => $newUf, 'district' => $newDistrict]);
+
+
+        return response()->json(User::all()->find($user->id));
     }
 
     public function getImgProfile($fileName) {
