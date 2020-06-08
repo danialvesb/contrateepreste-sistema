@@ -88,6 +88,38 @@ class ManagerProfileMeController extends Controller
         return response()->json(User::all()->find($user->id));
     }
 
+    public function updatePhotoMobile(Request $request)
+    {
+        $user = auth()->user();
+        $data['photo'] = $user->image;
+        $photoBin = base64_decode($request['photo']);
+        $size = getImageSizeFromString($photoBin);
+
+        if(isset($request->photo)){
+            if ($user->photo) {
+                $name = $user->photo;
+            }else {
+                $name = $user->id.Str::kebab($user->name);
+                $name = preg_replace('/[^a-zA-Z0-9_]/', '', $name);
+                $extenstion = substr($size['mime'], 6);
+                $name = "{$name}.{$extenstion}";
+            }
+            if (empty($size['mime']) || strpos($size['mime'], 'image/') !== 0)
+                die('Base64 value is not a valid image');
+
+            $ext = substr($size['mime'], 6);
+            if (!in_array($ext, ['png', 'gif', 'jpeg']))
+                die('Unsupported image type');
+
+            $dir = public_path().'\\storage\\images\\profile\\';
+            $img_file = "{$dir}{$name}";
+            $status = file_put_contents($img_file, $photoBin);
+
+            return response(['message'=> $status ? 'Sucess' : 'Error'], 201);
+        }
+        return response(['status' => 'Erro'], 501);
+    }
+
     public function getImgProfile($fileName) {
         $base_path = '\images\profile\\';
         $path = storage_path('app\public'.$base_path.$fileName);

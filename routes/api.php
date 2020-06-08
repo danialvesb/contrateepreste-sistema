@@ -10,6 +10,7 @@ Route::group(['prefix' => 'me'], function ($router) {
     Route::get('/_image/profile/{file_name}', 'ManagerProfileMeController@getImgProfile');
 
     Route::group(['middleware' => 'apijwt'], function ($router) {
+        Route::post('/update/photo', 'ManagerProfileMeController@updatePhotoMobile');
         Route::put('/update', 'ManagerProfileMeController@update');
     });
 });
