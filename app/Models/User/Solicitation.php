@@ -22,6 +22,13 @@ class Solicitation extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function messageChat()
+    {
+        //muitos pra muitos
+        return $this->belongsToMany(MessageChat::class);
+    }
+
+
     public function offer()
     {
         //Um para muitos (inverso)
