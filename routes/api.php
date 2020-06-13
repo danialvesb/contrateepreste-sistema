@@ -6,6 +6,14 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/signup', 'UserController@store');
 });
 
+Route::group(['prefix' => 'chat'], function ($router) {
+    Route::get('/', 'ChatsController@index');
+    Route::get('messages', 'ChatsController@fetchMessages');
+    Route::post('messages', 'ChatsController@sendMessage');
+
+});
+
+
 Route::group(['prefix' => 'me'], function ($router) {
     Route::get('/_image/profile/{file_name}', 'ManagerProfileMeController@getImgProfile');
 

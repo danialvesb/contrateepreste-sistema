@@ -25,7 +25,7 @@ class Solicitation extends Model
     public function messageChat()
     {
         //muitos pra muitos
-        return $this->belongsToMany(MessageChat::class);
+        return $this->hasMany(Message::class);
     }
 
 
