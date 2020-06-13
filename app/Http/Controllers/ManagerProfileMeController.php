@@ -54,10 +54,10 @@ class ManagerProfileMeController extends Controller
     {
         $dataRec = $request->all();
         $user = auth()->user();
-        $newMobile = $dataRec['mobile'];
-        $newCity = $dataRec['city'];
-        $newUf = $dataRec['uf'];
-        $newDistrict = $dataRec['district'];
+        $newMobile = isset($dataRec['mobile']) ? $dataRec['mobile'] : null;
+        $newCity = isset($dataRec['city']) ? $dataRec['city'] : null;
+        $newUf = isset($dataRec['uf']) ? $dataRec['uf'] : null;
+        $newDistrict = isset($dataRec['district']) ? $dataRec['district'] : null;
 
         $data['photo'] = $user->image;
         if($request->hasFile('photo') && $request->file('photo')->isValid()){
@@ -76,13 +76,20 @@ class ManagerProfileMeController extends Controller
             if ($upload) {
                 DB::table('users')
                     ->where('id', $user->id)
-                    ->update(['photo' => $name, 'mobile' => $newMobile, 'city' => $newCity, 'uf' => $newUf, 'district' => $newDistrict]);
+                    ->update(['photo' => $name,
+                        'mobile' => isset($newMobile) ? $newMobile : $user->mobile,
+                        'city' => isset($newCity) ? $newCity : $user->city,
+                        'uf' => isset($newUf) ? $newUf : $user->uf,
+                        'district' => isset($newDistrict) ? $newDistrict : $user->district]);
             }
 
         }
         DB::table('users')
             ->where('id', $user->id)
-            ->update(['mobile' => $newMobile, 'city' => $newCity, 'uf' => $newUf, 'district' => $newDistrict]);
+            ->update(['mobile' => isset($newMobile) ? $newMobile : $user->mobile,
+                'city' => isset($newCity) ? $newCity : $user->city,
+                'uf' => isset($newUf) ? $newUf : $user->uf,
+                'district' => isset($newDistrict) ? $newDistrict : $user->district]);
 
 
         return response()->json(User::all()->find($user->id));
