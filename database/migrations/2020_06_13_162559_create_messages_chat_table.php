@@ -22,7 +22,6 @@ class CreateMessagesChatTable extends Migration
         Schema::table('messages_chat', function (Blueprint $table) {
             $table->foreign('solicitation_id')->references('id')->on('solicitations')->onDelete('cascade');
         });
-
     }
 
     /**
