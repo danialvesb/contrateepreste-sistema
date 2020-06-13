@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Psy\Util\Json;
 
 
 class ManagerProfileMeController extends Controller
@@ -48,7 +47,7 @@ class ManagerProfileMeController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -92,7 +91,15 @@ class ManagerProfileMeController extends Controller
                 'district' => isset($newDistrict) ? $newDistrict : $user->district]);
 
 
-        return response()->json(User::all()->find($user->id));
+        $id = auth()->user()->id;
+
+        $me = DB::table('users')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->select('users.*', 'groups.name as group')
+            ->where('users.id', '=', $id)
+            ->get();
+        return response()->json($me[0]);
     }
 
     public function updatePhotoMobile(Request $request)

@@ -12,6 +12,7 @@ Route::group(['prefix' => 'me'], function ($router) {
     Route::group(['middleware' => 'apijwt'], function ($router) {
         Route::post('/update/photo', 'ManagerProfileMeController@updatePhotoMobile');
         Route::put('/update', 'ManagerProfileMeController@update');
+        Route::post('/update', 'ManagerProfileMeController@update');
     });
 });
 
