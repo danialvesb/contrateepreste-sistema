@@ -7,6 +7,7 @@ use App\Lib\PusherFactory;
 use App\Models\User\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ChatsController extends Controller
 {
@@ -17,6 +18,19 @@ class ChatsController extends Controller
      */
     public function index()
     {
+        $id = auth()->user()->id;
+
+        $data = DB::table('solicitations')
+            ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
+            ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('users as users_offer', 'users_offer.id', '=', 'offers.owner_id')
+            ->join('users as users_solicitation', 'users_solicitation.id', '=', 'solicitations.owner_id')
+            ->select('solicitations.id', 'solicitations.status', 'users_offer.name as owner_offer_name', 'users_solicitation.name as owner_solicitation_name'
+                , 'users_offer.photo as owner_offer_photo', 'users_solicitation.photo as owner_solicitation_photo')
+            ->where([['solicitations.owner_id', '=', $id], ['solicitations.status', '!=', 'denied'], ['solicitations.status', '!=', 'closed']])
+            ->get();
+        //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
+        return response()->json($data);
 
     }
 

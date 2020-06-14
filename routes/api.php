@@ -10,7 +10,6 @@ Route::group(['prefix' => 'chat', 'middleware' => 'apijwt'], function ($router) 
     Route::get('/', 'ChatsController@index');
     Route::get('messages', 'ChatsController@fetchMessages');
     Route::post('messages', 'ChatsController@sendMessage');
-
 });
 
 
