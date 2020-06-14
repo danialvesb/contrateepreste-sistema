@@ -45,13 +45,12 @@ class ChatsController extends Controller
 
         $data = DB::table('messages')
             ->join('solicitations', 'solicitations.id', '=', 'messages.solicitation_id')
-            ->join('users as user_from_name', 'user_from_name.id', '=', 'messages.from_user')
-            ->join('users as user_to_name', 'user_to_name.id', '=', 'messages.to_user')
-            ->select('messages.id', 'messages.from_user', 'messages.to_user', 'user_from_name.name as from_user_name', 'user_to_name.name as to_user_name', 'messages.text',
-                'messages.solicitation_id', 'messages.created_at', )
+            ->join('users as user_from', 'user_from.id', '=', 'messages.from_user')
+            ->join('users as user_to', 'user_to.id', '=', 'messages.to_user')
+            ->select('messages.id', 'messages.from_user', 'messages.to_user', 'user_from.name as from_user_name', 'user_to.name as to_user_name', 'messages.text',
+                'messages.solicitation_id', 'messages.created_at', 'user_from.photo as from_user_avatar', 'user_to.photo as to_user_avatar')
             ->where([['solicitations.id', '=', $solicitation]])
             ->get();
-
 
         //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
         return response()->json($data);
