@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Lib\PusherFactory;
 use App\Models\User\Message;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Response;
 
 class ChatsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function index()
     {
@@ -22,28 +23,33 @@ class ChatsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return string[]
      */
-    public function store(Request $request)
+    public function sendMessage(Request $request)
     {
-        event(new MessageSent('hello world'));
-
         $message = new Message();
+
         $dataRec = $request->all();
 
         $text = isset($dataRec['text']) ? $dataRec['text'] : '';
         $solicitationId = isset($dataRec['solicitation_id']) ? $dataRec['solicitation_id'] : '';
+        $fromUser = isset($dataRec['from_user']) ? $dataRec['from_user'] : '';
+        $toUser =  isset($dataRec['to_user']) ? $dataRec['to_user'] : '';
 
-        $message->fill(['text' => $text, 'solicitation_id' => $solicitationId]);
+        $message->fill(['text' => $text, 'solicitation_id' => $solicitationId, 'from_user' => $fromUser, 'to_user' => $toUser]);
         $message->save();
+
+        broadcast(new MessageSent($message));
+
+        return ['status' => 'Message Sent!'];
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
     public function show($id)
     {
@@ -53,9 +59,9 @@ class ChatsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return void
      */
     public function update(Request $request, $id)
     {
@@ -65,8 +71,8 @@ class ChatsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
     public function destroy($id)
     {

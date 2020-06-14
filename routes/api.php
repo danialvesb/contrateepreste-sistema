@@ -6,7 +6,7 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/signup', 'UserController@store');
 });
 
-Route::group(['prefix' => 'chat'], function ($router) {
+Route::group(['prefix' => 'chat', 'middleware' => 'apijwt'], function ($router) {
     Route::get('/', 'ChatsController@index');
     Route::get('messages', 'ChatsController@fetchMessages');
     Route::post('messages', 'ChatsController@sendMessage');

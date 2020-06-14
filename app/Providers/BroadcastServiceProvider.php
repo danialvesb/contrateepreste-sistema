@@ -14,7 +14,9 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Broadcast::routes( ['middleware' => 'apijwt'] );
+        $attributes = ['middleware' => ['apijwt']];
+
+        Broadcast::routes($attributes);
 
         require base_path('routes/channels.php');
     }

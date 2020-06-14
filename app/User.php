@@ -5,6 +5,7 @@ namespace App;
 
 use App\Models\Group;
 use App\Models\Service\Offer;
+use App\Models\User\Message;
 use App\Models\User\Solicitation;
 use App\Models\User\UserGroup;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -80,5 +81,10 @@ class User extends Authenticatable implements JWTSubject
     public function offers()
     {
         return $this->hasMany(Offer::class);
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 }
