@@ -49,8 +49,9 @@ class ChatsController extends Controller
             ->join('users as user_to', 'user_to.id', '=', 'messages.to_user')
             ->select('messages.id', 'messages.from_user', 'messages.to_user', 'user_from.name as from_user_name', 'user_to.name as to_user_name', 'messages.text',
                 'messages.solicitation_id', 'messages.created_at', 'user_from.photo as from_user_avatar', 'user_to.photo as to_user_avatar')
-            ->where([['solicitations.id', '=', $solicitation]])
+            ->where([['solicitations.id', '=', $solicitation]])->orderBy('messages.id', 'DESC')
             ->get();
+
 
         //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
         return response()->json($data);
