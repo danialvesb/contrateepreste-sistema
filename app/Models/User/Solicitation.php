@@ -14,6 +14,7 @@ class Solicitation extends Model
         'message',
         'owner_id',
         'offer_id',
+        'is_evaluate'
     ];
 
     public function user()

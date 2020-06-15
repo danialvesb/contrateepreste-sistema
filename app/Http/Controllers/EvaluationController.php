@@ -36,6 +36,10 @@ class EvaluationController extends Controller
             'solicitation_id' => $data['solicitation_id']]);
         $evaluation->save();
 
+        DB::table('solicitations')
+            ->where('id', $data['solicitation_id'])
+            ->update(['is_evaluate' => '1']);
+
         print_r($evaluation);exit();
     }
 
