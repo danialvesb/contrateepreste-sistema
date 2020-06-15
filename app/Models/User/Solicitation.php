@@ -14,6 +14,7 @@ class Solicitation extends Model
         'message',
         'owner_id',
         'offer_id',
+        'is_evaluate'
     ];
 
     public function user()
@@ -22,10 +23,23 @@ class Solicitation extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function messageChat()
+    {
+        //muitos pra muitos
+        return $this->hasMany(Message::class);
+    }
+
+
     public function offer()
     {
         //Um para muitos (inverso)
         return $this->belongsTo(Offer::class);
+    }
+
+    //um pra muitos
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
     }
 
     public function files() {

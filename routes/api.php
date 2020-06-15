@@ -6,10 +6,22 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('/signup', 'UserController@store');
 });
 
-Route::group(['middleware' => 'apijwt'], function ($router) {
-    Route::put('/me/update', 'ManagerProfileMeController@update');
+Route::group(['prefix' => 'chat', 'middleware' => 'apijwt'], function ($router) {
+    Route::get('messages/{solicitation}', 'ChatsController@fetchMessages');
+    Route::post('messages', 'ChatsController@sendMessage');
+    Route::get('/', 'ChatsController@index');
 });
 
+
+Route::group(['prefix' => 'me'], function ($router) {
+    Route::get('/_image/profile/{file_name}', 'ManagerProfileMeController@getImgProfile');
+
+    Route::group(['middleware' => 'apijwt'], function ($router) {
+        Route::post('/update/photo', 'ManagerProfileMeController@updatePhotoMobile');
+        Route::put('/update', 'ManagerProfileMeController@update');
+        Route::post('/update', 'ManagerProfileMeController@update');
+    });
+});
 
 Route::group(['middleware' => ['api'], 'prefix' => 'auth'], function ($router) {
     Route::post('/login', 'AuthController@login');
@@ -28,6 +40,10 @@ Route::group(['middleware' => ['apijwt'], 'prefix' => 'users'], function ($route
 });
 
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'services/offers'], function ($router) {
+    Route::get('/solicitations/evaluate/{solicitation}', 'EvaluationController@show');
+    Route::post('/solicitations/evaluate', 'EvaluationController@sendEvaluate');
+    Route::post('/solicitations/reply', 'EvaluationController@sendReply');
+
     Route::get('/solicitations', 'SolicitationController@index');
     Route::post('/solicitations', 'SolicitationController@store');
 });

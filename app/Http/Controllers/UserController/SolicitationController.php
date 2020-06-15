@@ -28,7 +28,8 @@ class SolicitationController extends Controller
             ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
             ->join('services', 'offers.service_id', '=', 'services.id')
             ->select('solicitations.id', 'solicitations.status', 'solicitations.message as solicitation_message', 'offers.amount', 'offers.description as offer_description', 'services.title as type_service')
-            ->where([['solicitations.owner_id', '=', $id], ['solicitations.status', '!=', 'denied'], ['solicitations.status', '!=', 'closed']])
+            ->where([['solicitations.owner_id', '=', $id], ['solicitations.status', '!=', 'denied'], ['solicitations.status', '!=', 'closed'], ['solicitations.status', '!=', 'finished']])
+            ->orWhere([['solicitations.is_evaluate', '=', '0']])
             ->get();
         //Foi necessário retornar o array, pois para fazer o map era necessário um, o $solicitations[0] não foi preciso.
         return response()->json($data);
@@ -130,8 +131,9 @@ class SolicitationController extends Controller
             $solicitationData = ['status'=>$status,
                 'message'=>$message,
                 'owner_id'=>$ownerId,
-                'offer_id'=>$offerId];
-
+                'offer_id'=>$offerId,
+                'is_evaluate'=> '0',
+            ];
             $solicitation =  $this->solicitations->create($solicitationData);
 
             $returns =  ['data' => ['message' => 'Oferta solicitada com sucesso']];

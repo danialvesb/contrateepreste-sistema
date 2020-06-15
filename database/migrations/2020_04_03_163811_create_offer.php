@@ -25,7 +25,6 @@ class CreateOffer extends Migration
             $table->foreign('owner_id')->references('id')->on('users');
             $table->foreign('service_id')->references('id')->on('services');
         });
-
     }
 
     /**
