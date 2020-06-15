@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\MessageSent;
 use App\Lib\PusherFactory;
 use App\Models\User\Message;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -72,10 +73,13 @@ class ChatsController extends Controller
 
         $text = isset($dataRec['text']) ? $dataRec['text'] : '';
         $solicitationId = isset($dataRec['solicitation_id']) ? $dataRec['solicitation_id'] : '';
-        $fromUser = isset($dataRec['from_user']) ? $dataRec['from_user'] : '';
+        $fromUserId = isset($dataRec['from_user']) ? $dataRec['from_user'] : '';
         $toUser =  isset($dataRec['to_user']) ? $dataRec['to_user'] : '';
 
-        $message->fill(['text' => $text, 'solicitation_id' => $solicitationId, 'from_user' => $fromUser, 'to_user' => $toUser]);
+        $fromUser = User::all()->find($fromUserId);
+
+        $message->fill(['text' => $text, 'solicitation_id' => $solicitationId, 'from_user' => $fromUserId, 'to_user' => $toUser,
+            'from_user_name' => $fromUser->name, 'from_user_avatar' => $fromUser->photo]);
         $message->save();
 
         broadcast(new MessageSent($message));
