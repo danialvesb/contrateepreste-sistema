@@ -40,6 +40,10 @@ Route::group(['middleware' => ['apijwt'], 'prefix' => 'users'], function ($route
 });
 
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'services/offers'], function ($router) {
+    Route::get('/solicitations/evaluate/{solicitation}', 'EvaluationController@show');
+    Route::post('/solicitations/evaluate', 'EvaluationController@sendEvaluate');
+    Route::post('/solicitations/reply', 'EvaluationController@sendReply');
+
     Route::get('/solicitations', 'SolicitationController@index');
     Route::post('/solicitations', 'SolicitationController@store');
 });

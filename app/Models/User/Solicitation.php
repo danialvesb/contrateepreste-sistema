@@ -35,6 +35,12 @@ class Solicitation extends Model
         return $this->belongsTo(Offer::class);
     }
 
+    //um pra muitos
+    public function evaluations()
+    {
+        return $this->hasMany(Evaluation::class);
+    }
+
     public function files() {
         return $this->belongsToMany(File::class);
     }
