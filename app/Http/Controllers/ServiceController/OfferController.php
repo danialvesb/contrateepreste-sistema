@@ -47,6 +47,7 @@ class OfferController extends Controller
                 'evaluations.comment',
                 'evaluations.reply',
                 'evaluations.rating',
+                'owner_offer.id as offer_owner',
                 'evaluations.created_at')
             ->join('solicitations', 'evaluations.solicitation_id', '=', 'solicitations.id')
             ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
