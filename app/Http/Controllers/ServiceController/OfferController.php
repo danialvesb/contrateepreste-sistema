@@ -38,6 +38,26 @@ class OfferController extends Controller
         return response()->json($offers);
     }
 
+    public function getOfferInteractions($offerId) {
+        $interactions = DB::table('evaluations')
+            ->select('offers.id as offer_id',
+                'owner_offer.name as provider_name',
+                'owner_solicitation.name as customer_name',
+                'evaluations.id as evaluations_id',
+                'evaluations.comment',
+                'evaluations.reply',
+                'evaluations.rating',
+                'evaluations.created_at')
+            ->join('solicitations', 'evaluations.solicitation_id', '=', 'solicitations.id')
+            ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
+            ->join('users as owner_offer', 'owner_offer.id', '=', 'offers.owner_id')
+            ->join('users as owner_solicitation', 'owner_solicitation.id', '=', 'solicitations.owner_id')
+            ->where('offers.id', '=', $offerId)
+            ->get();
+
+        return response()->json($interactions);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
