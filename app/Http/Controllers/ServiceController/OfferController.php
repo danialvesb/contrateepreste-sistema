@@ -31,8 +31,11 @@ class OfferController extends Controller
         $offers = DB::table('offers')
             ->select('offers.id', 'offers.service_id', 'offers.owner_id', 'offers.amount', 'offers.description',
                 'offers.rating', 'services.title as service_title', 'services.description as service_description',
-                'users.name', 'users.email', 'users.mobile', 'users.city', 'users.uf', 'users.district')
+                'users.name', 'users.email', 'users.mobile', 'users.city', 'users.uf', 'users.district', 'categories.id as category_id',
+                'categories.title as category_title')
             ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('category_service', 'category_service.service_id', '=', 'services.id')
+            ->join('categories', 'categories.id', '=', 'category_service.category_id')
             ->join('users', 'offers.owner_id', '=', 'users.id')
             ->get();
         return response()->json($offers);
