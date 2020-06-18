@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Service\Offer;
 use App\Models\User\Evaluation;
+use App\Models\User\Solicitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +42,34 @@ class EvaluationController extends Controller
             ->where('id', $data['solicitation_id'])
             ->update(['is_evaluate' => '1']);
 
-        print_r($evaluation);exit();
+        $qtdEvaluations = DB::table('evaluations')
+            ->select('evaluations.id')
+            ->join('solicitations', 'evaluations.solicitation_id', '=', 'solicitations.id')
+            ->join('offers', 'offers.id', '=', 'solicitations.offer_id')
+            ->get()->count();
+
+        $sumRating = DB::table('evaluations')
+            ->select('evaluations.rating')
+            ->join('solicitations', 'evaluations.solicitation_id', '=', 'solicitations.id')
+            ->join('offers', 'offers.id', '=', 'solicitations.offer_id')
+            ->sum('evaluations.rating');
+
+        $offerId = DB::table('evaluations')
+            ->select('offers.id')
+            ->join('solicitations', 'evaluations.solicitation_id', '=', 'solicitations.id')
+            ->join('offers', 'offers.id', '=', 'solicitations.offer_id')
+            ->first();
+
+
+        $newRating = $sumRating / $qtdEvaluations;
+
+
+        $numberFormat = strval(number_format($newRating, 1, '.',''));
+        DB::table('offers')
+            ->where('id', $offerId->id)
+            ->update(['rating' => $numberFormat]);
+
+        print_r($numberFormat);exit();
     }
 
     public function sendReply(Request $request)

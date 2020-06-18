@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Support\Str;
+use mysql_xdevapi\Table;
 use Validator;
 //Passar o validator para a model
 
@@ -77,6 +78,55 @@ class UserController extends Controller
             ->get();
 
         return response()->json($created[0], 201);
+    }
+
+    public function getReports() {
+        $qtdProviders = DB::table('users')
+            ->select('users.id')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->where('groups.id', '=', '1')
+            ->count('users.id');
+
+        $qtdCustomers = DB::table('users')
+            ->select('users.id')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->where('groups.id', '=', '2')
+            ->count('users.id');
+
+        $qtdServices = DB::table('services')
+            ->select('services.id')
+            ->count('services.id');
+
+        $qtdOffers = DB::table('offers')
+            ->select('offers.id')
+            ->count('offers.id');
+
+        $return = [
+            'providers' => [
+                'id' => "1",
+                'text' => 'Prestadores:',
+                'qtd' => $qtdProviders
+            ],
+            'customers' => [
+                'id' => "2",
+                'text' => 'Clientes:',
+                'qtd' => $qtdCustomers
+            ],
+            'services' => [
+                'id' => "3",
+                'text' => 'Serviços:',
+                'qtd' => $qtdServices
+            ],
+            'offers' => [
+                'id' => "4",
+                'text' => 'Ofertas de serviços:',
+                'qtd' => $qtdOffers
+            ]
+        ];
+
+        return response()->json($return);
     }
 
     /**

@@ -31,11 +31,35 @@ class OfferController extends Controller
         $offers = DB::table('offers')
             ->select('offers.id', 'offers.service_id', 'offers.owner_id', 'offers.amount', 'offers.description',
                 'offers.rating', 'services.title as service_title', 'services.description as service_description',
-                'users.name', 'users.email', 'users.mobile', 'users.city', 'users.uf', 'users.district')
+                'users.name', 'users.email', 'users.mobile', 'users.city', 'users.uf', 'users.district', 'categories.id as category_id',
+                'categories.title as category_title')
             ->join('services', 'offers.service_id', '=', 'services.id')
+            ->join('category_service', 'category_service.service_id', '=', 'services.id')
+            ->join('categories', 'categories.id', '=', 'category_service.category_id')
             ->join('users', 'offers.owner_id', '=', 'users.id')
             ->get();
         return response()->json($offers);
+    }
+
+    public function getOfferInteractions($offerId) {
+        $interactions = DB::table('evaluations')
+            ->select('offers.id as offer_id',
+                'owner_offer.name as provider_name',
+                'owner_solicitation.name as customer_name',
+                'evaluations.id as evaluations_id',
+                'evaluations.comment',
+                'evaluations.reply',
+                'evaluations.rating',
+                'owner_offer.id as offer_owner',
+                'evaluations.created_at')
+            ->join('solicitations', 'evaluations.solicitation_id', '=', 'solicitations.id')
+            ->join('offers', 'solicitations.offer_id', '=', 'offers.id')
+            ->join('users as owner_offer', 'owner_offer.id', '=', 'offers.owner_id')
+            ->join('users as owner_solicitation', 'owner_solicitation.id', '=', 'solicitations.owner_id')
+            ->where('offers.id', '=', $offerId)
+            ->get();
+
+        return response()->json($interactions);
     }
 
     /**

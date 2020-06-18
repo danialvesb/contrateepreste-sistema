@@ -34,6 +34,10 @@ Route::group(['prefix' => 'users'], function ($router) {
     Route::get('/groups', 'GroupController@index');
 });
 
+Route::group(['middleware' => ['apijwt'], 'prefix' => 'dashboard'], function ($router) {
+    Route::get('/', 'UserController@getReports');
+});
+
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'users'], function ($router) {
     Route::get('/{id}', 'UserController@show');
     Route::get('/', 'UserController@index');
@@ -43,7 +47,6 @@ Route::group(['middleware' => ['apijwt'], 'prefix' => 'services/offers'], functi
     Route::get('/solicitations/evaluate/{solicitation}', 'EvaluationController@show');
     Route::post('/solicitations/evaluate', 'EvaluationController@sendEvaluate');
     Route::post('/solicitations/reply', 'EvaluationController@sendReply');
-
     Route::get('/solicitations', 'SolicitationController@index');
     Route::post('/solicitations', 'SolicitationController@store');
 });
@@ -59,6 +62,9 @@ Route::group(['middleware'=> ['apijwt'], 'prefix'=>'services/offers'], function 
 });
 
 Route::group(['prefix' => 'services/offers'], function ($router) {
+
+    Route::get('/interactions/{offer}', 'OfferController@getOfferInteractions');
+
     Route::get('/', 'OfferController@index');
     Route::get('/{id}', 'OfferController@show');
     Route::post('/', 'OfferController@store');
@@ -73,7 +79,10 @@ Route::group(['prefix' => 'services/categories'], function ($router) {
     Route::put('/{id}', 'CategoryController@update');
 });
 
+Route::get('services/_image/services/{file_name}', 'ServiceController@getImgService');
+
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'services'], function ($router) {
+
     Route::get('/', 'ServiceController@index');
     Route::get('/details', 'ServiceController@index');
     Route::put('/{id}', 'ServiceController@update');

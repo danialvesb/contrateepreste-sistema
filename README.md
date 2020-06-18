@@ -12,3 +12,5 @@
 <p>php artisan jwt:secret</p>
 <p>php artisan config:clear</p>
 <p>php artisan config:cache</p>
+<p>php artisan serve php artisan serve --host="192.168.3.103" é importante pois o app e site espera receber uma url específica</p>
+

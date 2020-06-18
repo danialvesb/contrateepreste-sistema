@@ -26,7 +26,8 @@ class ChatsController extends Controller
             ->join('services', 'offers.service_id', '=', 'services.id')
             ->join('users as users_offer', 'users_offer.id', '=', 'offers.owner_id')
             ->join('users as users_solicitation', 'users_solicitation.id', '=', 'solicitations.owner_id')
-            ->select('solicitations.id', 'solicitations.status', 'users_offer.name as owner_offer_name', 'users_solicitation.name as owner_solicitation_name'
+            ->select('solicitations.id', 'solicitations.status', 'users_offer.name as owner_offer_name', 'users_solicitation.name as owner_solicitation_name',
+                'users_solicitation.id as owner_solicitation_id'
                 ,'users_offer.photo as owner_offer_photo', 'users_solicitation.photo as owner_solicitation_photo', 'users_offer.id as owner_offer_id')
             ->where([['solicitations.owner_id', '=', $id], ['solicitations.status', '!=', 'denied'], ['solicitations.status', '!=', 'closed']])
             ->orWhere([['offers.owner_id', '=', $id]])
@@ -82,7 +83,7 @@ class ChatsController extends Controller
         $message->fill(['text' => $text, 'solicitation_id' => $solicitationId, 'from_user' => $fromUserId, 'to_user' => $toUser,]);
         $message->save();
         $notification = [
-            'text' => $text, 'solicitation_id' => $solicitationId, 'from_user' => $fromUserId, 'to_user' => $toUser,
+            'id' => $message->id, 'text' => $text, 'solicitation_id' => $solicitationId, 'from_user' => $fromUserId, 'to_user' => $toUser,
             'from_user_name' => $fromUser->name, 'from_user_avatar' => $fromUser->photo
         ];
         broadcast(new MessageSent($notification));
