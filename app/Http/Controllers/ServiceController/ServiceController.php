@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use PhpParser\Node\Expr\New_;
 
 class ServiceController extends Controller
@@ -23,7 +26,7 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -38,23 +41,37 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
         try {
-            $title = $request->json('title');
-            $description =  $request->json('description');
-            $imagePath = $request->json('image_path');
-            $categories = $request->json('categories');
+            $data = $request->all();
+            $service = new Service();
 
-            $serviceData = ['title'=>$title,
-                'description'=>$description,
-                'image_path'=>$imagePath];
+            $title = $data['title'];
+            $description =  $data['description'];
+            $categories = $data['category_selected'];
+            $image = $data['image'];
 
-            $service =  $this->services->create($serviceData);
-            $service->categories()->attach($categories);
+            if($request->hasFile('image') && $request->file('image')->isValid()){
+                $nameFIle = Str::kebab($title).Str::kebab(date('Y-m-d H:i'));
+                $namePhotoFormat = preg_replace('/[^a-zA-Z0-9_]/', '', $nameFIle);
+                $extPhoto = $request->image->extension();
+                $nameFIleAndExt = "{$namePhotoFormat}.{$extPhoto}";
+
+                $upload = $request->image->storeAs('/images/services', $nameFIleAndExt);
+
+                $service->fill(['title' => $title, 'description' => $description, 'image_path' => $upload]);
+                $service->save();
+                $service->categories()->attach($categories);
+            }else{
+                $service->fill(['title' => $title, 'description' => $description, 'image_path' => 'null']);
+                $service->save();
+                $service->categories()->attach($categories);
+            }
+
 
             $returns =  ['data' => ['message' => 'Serviço cadastrado com sucesso']];
             return response()->json($returns, 201);
@@ -68,7 +85,7 @@ class ServiceController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -84,9 +101,9 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -106,7 +123,7 @@ class ServiceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

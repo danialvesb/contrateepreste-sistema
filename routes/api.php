@@ -34,7 +34,12 @@ Route::group(['prefix' => 'users'], function ($router) {
     Route::get('/groups', 'GroupController@index');
 });
 
+Route::group(['middleware' => ['apijwt'], 'prefix' => 'dashboard'], function ($router) {
+    Route::get('/', 'UserController@getReports');
+});
+
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'users'], function ($router) {
+//    Route::get('')
     Route::get('/{id}', 'UserController@show');
     Route::get('/', 'UserController@index');
 });
