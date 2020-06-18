@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use PhpParser\Node\Expr\New_;
@@ -38,6 +39,23 @@ class ServiceController extends Controller
         return response()->json($services);
     }
 
+    public function getImgService($fileName) {
+        $base_path = '\images\services\\';
+        $path = storage_path('app\public'.$base_path.$fileName);
+
+        if (!File::exists($path)) {
+            return response('erro', 404);
+        }
+
+        $file = File::get($path);
+        $type = File::mimeType($path);
+
+        $response = \Illuminate\Support\Facades\Response::make($file, 200);
+        $response->header("Content-Type", $type);
+
+        return $response;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -63,7 +81,7 @@ class ServiceController extends Controller
 
                 $upload = $request->image->storeAs('/images/services', $nameFIleAndExt);
 
-                $service->fill(['title' => $title, 'description' => $description, 'image_path' => $upload]);
+                $service->fill(['title' => $title, 'description' => $description, 'image_path' => $nameFIleAndExt]);
                 $service->save();
                 $service->categories()->attach($categories);
             }else{

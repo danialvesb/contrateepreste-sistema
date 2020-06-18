@@ -39,7 +39,6 @@ Route::group(['middleware' => ['apijwt'], 'prefix' => 'dashboard'], function ($r
 });
 
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'users'], function ($router) {
-//    Route::get('')
     Route::get('/{id}', 'UserController@show');
     Route::get('/', 'UserController@index');
 });
@@ -80,7 +79,10 @@ Route::group(['prefix' => 'services/categories'], function ($router) {
     Route::put('/{id}', 'CategoryController@update');
 });
 
+Route::get('services/_image/services/{file_name}', 'ServiceController@getImgService');
+
 Route::group(['middleware' => ['apijwt'], 'prefix' => 'services'], function ($router) {
+
     Route::get('/', 'ServiceController@index');
     Route::get('/details', 'ServiceController@index');
     Route::put('/{id}', 'ServiceController@update');
