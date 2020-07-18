@@ -22,7 +22,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+
+        $users = DB::table('users')
+            ->select('users.id', 'users.name', 'users.email', 'users.email_verified_at',
+                'users.photo', 'users.mobile', 'users.city', 'users.uf','users.district', 'users.created_at',
+                'users.updated_at', 'groups.name as type')
+            ->join('users_groups', 'users.id', '=', 'users_groups.user_id')
+            ->join('groups', 'groups.id', '=', 'users_groups.group_id')
+            ->get();
+
         return response()->json($users);
     }
 

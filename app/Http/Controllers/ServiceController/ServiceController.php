@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use PhpParser\Node\Expr\New_;
 
 class ServiceController extends Controller
 {
@@ -27,13 +24,18 @@ class ServiceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-
         $services = DB::table('services')
-            ->select('*')
+            ->select('services.id', 'services.title', 'services.description',
+                'services.image_path', 'services.created_at', 'services.updated_at',DB::raw('count(offers.service_id) as qtd_offers'),
+                'categories.id as id_category', 'categories.title as category_title')
+            ->leftJoin('offers', 'offers.service_id', '=', 'services.id')
+            ->join('category_service', 'services.id', '=', 'category_service.service_id')
+            ->join('categories', 'category_service.category_id', '=', 'categories.id')
+            ->groupBy('services.id')
             ->get();
 
         return response()->json($services);
@@ -60,7 +62,7 @@ class ServiceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -103,7 +105,7 @@ class ServiceController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -121,7 +123,7 @@ class ServiceController extends Controller
      *
      * @param Request $request
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -141,7 +143,7 @@ class ServiceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {
