@@ -12,8 +12,11 @@ services:
 
     mysql-app:
         image: mysql:5.7.22
+        command: --innodb-use-native-aio=0
         ports:
             - "3306:3306"
+        volumes:
+            - .docker/dbdata:/var/lib/mysq
         environment:
             MYSQL_DATABASE: oficial_contrateonline
             MYSQL_ROOT_PASSWORD: root
